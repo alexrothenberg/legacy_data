@@ -1,6 +1,8 @@
 = legacy_data
 
-Description goes here.
+How can you start a rails project on top of a large legacy database ... use the legacy_data plugin.
+
+ 
 
 == Note on Patches/Pull Requests
  

@@ -5,12 +5,14 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "legacy_data"
-    gem.summary = %Q{TODO: one-line summary of your gem}
+    gem.summary = %Q{Create ActiveRecord models from an existing database}
     gem.description = %Q{TODO: longer description of your gem}
     gem.email = "alex@alexrothenberg.com"
     gem.homepage = "http://github.com/alexrothenberg/legacy_data"
     gem.authors = ["Alex Rothenberg"]
     gem.add_development_dependency "rspec"
+    gem.add_dependency('activerecord')
+    
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
 rescue LoadError
