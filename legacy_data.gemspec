@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{legacy_data}
-  s.version = "0.0.0"
+  s.version = "0.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alex Rothenberg"]
@@ -23,9 +23,10 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "VERSION",
-     "generators/legacy_models/legacy_models_generator.rb",
      "generators/legacy_models/USAGE",
+     "generators/legacy_models/legacy_models_generator.rb",
      "generators/legacy_models/templates/model.rb",
+     "legacy_data.gemspec",
      "lib/active_record/connection_adapters/oracle_enhanced_adapter.rb",
      "lib/legacy_data.rb",
      "lib/legacy_data/schema.rb",
