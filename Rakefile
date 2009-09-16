@@ -6,7 +6,7 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name = "legacy_data"
     gem.summary = %Q{Create ActiveRecord models from an existing database}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.description = %Q{Create ActiveRecord models from an existing database}
     gem.email = "alex@alexrothenberg.com"
     gem.homepage = "http://github.com/alexrothenberg/legacy_data"
     gem.authors = ["Alex Rothenberg"]

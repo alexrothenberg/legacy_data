@@ -22,7 +22,11 @@ module LegacyData
     
     
     def class_name
-      ActiveRecord::Base.class_name(table_name)
+      class_name_for(self.table_name)
+    end
+
+    def class_name_for table
+      ActiveRecord::Base.class_name(table.downcase.pluralize)
     end
 
     def primary_key
@@ -41,7 +45,7 @@ module LegacyData
       
       belongs_to = {}
       connection.foreign_keys_for(table_name).each do |relation|
-        class_name = ActiveRecord::Base.class_name(relation.first).underscore.pluralize.to_sym
+        class_name = class_name_for(relation.first).underscore.to_sym
         belongs_to[class_name] = relation.second.downcase.to_sym
       end
       belongs_to
@@ -51,7 +55,7 @@ module LegacyData
 
       has_some = {}
       connection.foreign_keys_of(table_name).each do |relation|
-        class_name = ActiveRecord::Base.class_name(relation.first).underscore.pluralize.to_sym
+        class_name = class_name_for(relation.first).underscore.pluralize.to_sym
         has_some[class_name] = relation.second.downcase.to_sym
       end
       has_some
@@ -77,7 +81,7 @@ module LegacyData
       return [] unless connection.respond_to? :constraints
       user_constraints = {}
       connection.constraints(table_name).each do |constraint|
-        user_constraints[constraint.first.underscore] = constraint.second
+        user_constraints[constraint.first.underscore.to_sym] = constraint.second
       end
       user_constraints
     end    
@@ -92,6 +96,3 @@ module LegacyData
 
   end
 end
-
-
-

@@ -31,11 +31,20 @@ describe LegacyData::Schema do
     end
     
     it 'should have the correct table name' do
-      @schema.class_name[:table_name].should == 'some_table'
+      @schema.table_name.should == 'some_table'
     end
   
     it 'should have the correct class name' do
+      ActiveRecord::Base.should_receive(:class_name).with('some_tables').and_return('SomeClass')
       @schema.class_name.should == 'SomeClass'
+    end
+  
+    it 'should handle tables with a singular name that ends with s' do
+      @schema.class_name_for('ADDRESS').should == 'Address'
+    end
+  
+    it 'should handle tables with an irregular pluralization name' do
+      @schema.class_name_for('TBPERSON').should == 'Tbperson'
     end
   
     it 'should have the correct primary_key' do
@@ -51,7 +60,7 @@ describe LegacyData::Schema do
     it 'should get all "has_some" (has_many and has_one) relationships when my primary key is the foreign key in another table ' do
       @connection.should_receive(:respond_to?).with(:foreign_keys_of).and_return(true)
       @connection.should_receive(:foreign_keys_of).and_return([['OTHER_TABLE', 'PK'], ['THE_TABLE', 'PK']])
-      @schema.has_some_relations.should == {:othertables => :pk, :thetables => :pk}
+      @schema.has_some_relations.should == {:other_tables => :pk, :the_tables => :pk}
     end
   
     it 'should give no "belongs_to" when the adapter does not support foreign keys' do
@@ -62,15 +71,15 @@ describe LegacyData::Schema do
     it 'should get all "belongs_to" relationships when a foreign key is in my table' do
       @connection.should_receive(:respond_to?).with(:foreign_keys_for).and_return(true)
       @connection.should_receive(:foreign_keys_for).and_return([['OTHER_TABLE', 'FK_1'], ['THE_TABLE', 'the_table_id']])
-      @schema.belongs_to_relations.should == {:othertables => :fk_1, :thetables => :the_table_id}
+      @schema.belongs_to_relations.should == {:other_table => :fk_1, :the_table => :the_table_id}
     end
   
     it 'should have the correct constraints'
 
     it 'should get non-nullable constraints' do
-      @connection.should_receive(:columns).with('some_table').and_return([col1=stub(:null=>false, :name=>'col1'), 
-                                                                          col2=stub(:null=>true,  :name=>'col2'),
-                                                                          col3=stub(:null=>false, :name=>'col3')])
+      @connection.should_receive(:columns).with('some_table', 'some_table Columns').and_return([col1=stub(:null=>false, :name=>'col1'), 
+                                                                                                col2=stub(:null=>true,  :name=>'col2'),
+                                                                                                col3=stub(:null=>false, :name=>'col3')])
       @schema.non_nullable_constraints.should == ['col1', 'col3']
     end
   
@@ -88,8 +97,8 @@ describe LegacyData::Schema do
   
     it 'should get all "belongs_to" relationships when a foreign key is in my table' do
       @connection.should_receive(:respond_to?).with(:constraints).and_return(true)
-      @connection.should_receive(:constraints).and_return([['Some Constraint', 'custom sql 1'], ['another constraint', 'more custom sql']])
-      @schema.custom_constraints.should == {:some_constraint => 'custom sql 1', :another_constraint => 'more custom sql'}
+      @connection.should_receive(:constraints).and_return([['SomeConstraint', 'custom sql 1'], ['anotherconstraint', 'more custom sql']])
+      @schema.custom_constraints.should == {:some_constraint => 'custom sql 1', :anotherconstraint => 'more custom sql'}
     end
   
   end
