@@ -46,6 +46,20 @@ describe LegacyData::Schema do
     it 'should handle tables with an irregular pluralization name' do
       @schema.class_name_for('TBPERSON').should == 'Tbperson'
     end
+    
+    describe 'ignore the table prefix naming convention when figuring out the model name' do
+      before :each do
+        @schema = LegacyData::Schema.new('some_table', 'tb')
+      end
+      
+      it 'should strip off the prefix' do
+        @schema.class_name_for('TBPERSON').should == 'Person'
+      end
+
+      it 'should work on tables that do not have the prefix' do
+        @schema.class_name_for('PERSON').should == 'Person'
+      end
+    end
   
     it 'should have the correct primary_key' do
       @connection.should_receive(:pk_and_sequence_for).with('some_table').and_return(['PK', 'SEQ'])

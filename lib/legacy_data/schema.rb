@@ -2,8 +2,9 @@ module LegacyData
   class Schema
     attr_reader :table_name
     
-    def initialize(table_name)
-      @table_name = table_name
+    def initialize(table_name, table_prefix_naming_convention='')
+      @table_name                     = table_name
+      @table_prefix_naming_convention = table_prefix_naming_convention
     end
     
     def analyze_table
@@ -26,7 +27,9 @@ module LegacyData
     end
 
     def class_name_for table
-      ActiveRecord::Base.class_name(table.downcase.pluralize)
+      table =~ /^#{@table_prefix_naming_convention}(.*)/i
+      stripped_table_name = $1 || table
+      ActiveRecord::Base.class_name(stripped_table_name.downcase.pluralize)
     end
 
     def primary_key
