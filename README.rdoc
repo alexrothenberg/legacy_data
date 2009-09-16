@@ -2,6 +2,11 @@
 
 How can you start a rails project on top of a large legacy database ... use the legacy_data plugin.
 
+Usage: script/generate legacy_models [options]
+        --tables-starting-with [ARG] Only generate models for tables starting with
+        --table-prefix-naming-convention [ARG]
+                                     Naming convention for tables in the database - will not be used when generating naming the models
+
  
 
 == Note on Patches/Pull Requests
