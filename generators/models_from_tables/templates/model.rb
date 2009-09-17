@@ -1,6 +1,6 @@
 class <%= class_name -%> < ActiveRecord::Base
   set_table_name :<%= table_name %>
-  set_primary_key :<%= primary_key %>
+  <%= "set_primary_key #{primary_key}" if primary_key %>
   
   # Relationships
   <%- relations[:has_some].each do |class_name, foreign_key| 
@@ -19,7 +19,8 @@ class <%= class_name -%> < ActiveRecord::Base
   <%- constraints[:custom].each do |name, sql_rule| 
   -%>  validate <%= "validate_#{name}".to_sym.inspect %>
   def <%= "validate_#{name}" %>
-    # TODO: validate this SQL constraint "<%= sql_rule %>"
+    # TODO: validate this SQL constraint 
+    "<%= sql_rule %>"
   end
   <%- end %>
 end
