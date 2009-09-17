@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{legacy_data}
-  s.version = "0.0.3"
+  s.version = "0.0.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alex Rothenberg"]
-  s.date = %q{2009-09-16}
+  s.date = %q{2009-09-17}
   s.description = %q{Create ActiveRecord models from an existing database}
   s.email = %q{alex@alexrothenberg.com}
   s.extra_rdoc_files = [
@@ -23,9 +23,9 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "VERSION",
-     "generators/legacy_models/USAGE",
-     "generators/legacy_models/legacy_models_generator.rb",
-     "generators/legacy_models/templates/model.rb",
+     "generators/models_from_tables/USAGE",
+     "generators/models_from_tables/models_from_tables_generator.rb",
+     "generators/models_from_tables/templates/model.rb",
      "legacy_data.gemspec",
      "lib/active_record/connection_adapters/oracle_enhanced_adapter.rb",
      "lib/legacy_data.rb",

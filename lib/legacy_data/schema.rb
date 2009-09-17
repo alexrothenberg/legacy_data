@@ -2,9 +2,10 @@ module LegacyData
   class Schema
     attr_reader :table_name
     
-    def initialize(table_name, table_prefix_naming_convention='')
-      @table_name                     = table_name
-      @table_prefix_naming_convention = table_prefix_naming_convention
+    def initialize(table_name, naming_convention=nil)
+      @table_name        = table_name
+      @naming_convention = naming_convention
+      @naming_convention = /^#{naming_convention.gsub('*', '(.*)')}$/i if @naming_convention.is_a? String
     end
     
     def analyze_table
@@ -17,7 +18,7 @@ module LegacyData
     end
     
     def self.tables name_pattern=/.*/
-      connection.tables.select {|table_name| table_name =~ name_pattern }
+      connection.tables.select {|table_name| table_name =~ name_pattern }.sort
     end
     
     
@@ -27,7 +28,7 @@ module LegacyData
     end
 
     def class_name_for table
-      table =~ /^#{@table_prefix_naming_convention}(.*)/i
+      table =~ @naming_convention
       stripped_table_name = $1 || table
       ActiveRecord::Base.class_name(stripped_table_name.downcase.pluralize)
     end
@@ -74,8 +75,10 @@ module LegacyData
     end
     
     def non_nullable_constraints
-      connection.columns(table_name, "#{table_name} Columns").reject(&:null).map(&:name)
+      non_nullable_constraints = connection.columns(table_name, "#{table_name} Columns").reject(&:null).map(&:name)
+      non_nullable_constraints.reject {|col| col == primary_key}
     end
+
     def unique_constraints
       connection.indexes(table_name).select(&:unique).map(&:columns)
     end

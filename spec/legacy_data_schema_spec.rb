@@ -49,7 +49,7 @@ describe LegacyData::Schema do
     
     describe 'ignore the table prefix naming convention when figuring out the model name' do
       before :each do
-        @schema = LegacyData::Schema.new('some_table', 'tb')
+        @schema = LegacyData::Schema.new('some_table', /^TB(.*)$/)
       end
       
       it 'should strip off the prefix' do
@@ -90,11 +90,13 @@ describe LegacyData::Schema do
   
     it 'should have the correct constraints'
 
-    it 'should get non-nullable constraints' do
+    it 'should get non-nullable constraints as all columns that do not allow null except the primary key' do
+      @schema.stub(:primary_key).and_return('col1')   
       @connection.should_receive(:columns).with('some_table', 'some_table Columns').and_return([col1=stub(:null=>false, :name=>'col1'), 
-                                                                                                col2=stub(:null=>true,  :name=>'col2'),
-                                                                                                col3=stub(:null=>false, :name=>'col3')])
-      @schema.non_nullable_constraints.should == ['col1', 'col3']
+                                                                                                col2=stub(:null=>false, :name=>'col2'),
+                                                                                                col3=stub(:null=>true,  :name=>'col3'),
+                                                                                                col3=stub(:null=>false, :name=>'col4')])
+      @schema.non_nullable_constraints.should == ['col2', 'col4']
     end
   
     it 'should get uniqueness constraints' do
