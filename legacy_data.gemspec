@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{legacy_data}
-  s.version = "0.0.6"
+  s.version = "0.0.7"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alex Rothenberg"]
@@ -31,7 +31,8 @@ Gem::Specification.new do |s|
      "lib/legacy_data.rb",
      "lib/legacy_data/schema.rb",
      "lib/legacy_data/table_class_name_mapper.rb",
-     "spec/legacy_data_schema_spec.rb",
+     "spec/legacy_data/schema_spec.rb",
+     "spec/legacy_data/table_class_name_mapper_spec.rb",
      "spec/spec_helper.rb"
   ]
   s.has_rdoc = true
@@ -41,8 +42,8 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.2}
   s.summary = %q{Create ActiveRecord models from an existing database}
   s.test_files = [
-    "spec/legacy_data_schema_spec.rb",
-     "spec/legacy_data_table_class_name_mapper_spec.rb",
+    "spec/legacy_data/schema_spec.rb",
+     "spec/legacy_data/table_class_name_mapper_spec.rb",
      "spec/spec_helper.rb"
   ]
 
