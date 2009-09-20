@@ -11,7 +11,11 @@ class ModelsFromTablesGenerator < Rails::Generator::Base
       
       analyzed_tables = LegacyData::Schema.analyze(:table_name=>options[:table_name])
       LegacyData::TableClassNameMapper.save_dictionary
-      puts "Please look at #{LegacyData::TableClassNameMapper.dictionary_file_name} [hit <enter> to continue]"
+      puts <<-MSG
+Done analyzing the tables.  
+  Please review the class names shown above.  If any do not look correct (for example it did not separate the words with CamelCase) please supply the correct mappings by editing the file #{LegacyData::TableClassNameMapper.dictionary_file_name}.  
+  Once you're done hit <enter> to continue generating the models"
+      MSG
       gets
       LegacyData::TableClassNameMapper.load_dictionary
 

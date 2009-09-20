@@ -26,7 +26,7 @@ module LegacyData
 
     def load_dictionary
       @dictionary = nil
-      YAML.load_file(dictionary_file_name) || {}
+      File.exists?(dictionary_file_name) ? YAML.load_file(dictionary_file_name) : {}
     end
 
     def save_dictionary
@@ -36,7 +36,7 @@ module LegacyData
     end
     
     def dictionary_file_name
-      File.join(RAILS_ROOT, 'app', 'models', 'table_mappings.yaml')
+      File.join(RAILS_ROOT, 'app', 'models', 'table_mappings.yml')
     end
     
     def self.class_name_for table_name

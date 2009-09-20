@@ -1,6 +1,6 @@
 class <%= class_name -%> < ActiveRecord::Base
-  set_table_name :<%= table_name %>
-  <%= "set_primary_key #{primary_key.inspect}" if primary_key %>
+  set_table_name <%= table_name.to_sym.inspect %>
+  <%= "set_primary_key #{primary_key.to_sym.inspect}" if primary_key %>
   
   # Relationships
   <%- relations[:has_some].each do |table_name, foreign_key| 
