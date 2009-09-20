@@ -1,6 +1,29 @@
-require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe LegacyData::Schema do
+  describe 'following associations' do
+    it 'should analyze all tables when not given a table to start with' do
+      LegacyData::Schema.should_receive(:tables).and_return(['posts', 'comments'])
+      LegacyData::Schema.should_receive(:analyze_table).with('posts'   ).and_return(posts_analysis   =mock)
+      LegacyData::Schema.should_receive(:analyze_table).with('comments').and_return(comments_analysis=mock)
+      
+      posts_analysis.stub!(   :[]).with(:relations).and_return({:belongs_to=>{}, :has_some=>{}})
+      comments_analysis.stub!(:[]).with(:relations).and_return({:belongs_to=>{}, :has_some=>{}})
+      
+      LegacyData::Schema.analyze.should include(posts_analysis, comments_analysis)
+    end
+
+    it 'should find the associated comments when starting with posts' do
+      LegacyData::Schema.should_receive(:analyze_table).with('posts'   ).and_return(posts_analysis   =mock)
+      LegacyData::Schema.should_receive(:analyze_table).with('comments').and_return(comments_analysis=mock)
+      
+      posts_analysis.stub!(   :[]).with(:relations).and_return({:belongs_to=>{                 }, :has_some=>{:comments=>:posts_id}})
+      comments_analysis.stub!(:[]).with(:relations).and_return({:belongs_to=>{:posts=>:posts_id}, :has_some=>{                    }})
+      
+      LegacyData::Schema.analyze(:table_name=>'posts').should include(posts_analysis, comments_analysis)
+    end
+  end
+  
   before :each do
     LegacyData::Schema.instance_variable_set('@conn', nil)
     ActiveRecord::Base.stub(:connection).and_return(@connection=stub(:connection))
@@ -19,14 +42,14 @@ describe LegacyData::Schema do
   describe 'analyzing a table' do
     before :each do
       @schema = LegacyData::Schema.new('some_table')
+      @schema.stub!(:puts)
     end
     
-    it 'should have all the information about the table' do
-      @schema.should_receive(:class_name)
-      @schema.should_receive(:primary_key)
-      @schema.should_receive(:relations)
-      @schema.should_receive(:constraints)
-  
+    it 'should have all the information about the table' do  
+      @schema.stub!(:class_name)
+      @schema.stub!(:primary_key)
+      @schema.stub!(:relations)
+      @schema.stub!(:constraints)
       @schema.analyze_table.keys.should include(:table_name, :class_name, :primary_key, :relations, :constraints)
     end
     
@@ -35,30 +58,8 @@ describe LegacyData::Schema do
     end
   
     it 'should have the correct class name' do
-      ActiveRecord::Base.should_receive(:class_name).with('some_tables').and_return('SomeClass')
+      LegacyData::TableClassNameMapper.should_receive(:class_name_for).with('some_table').and_return('SomeClass')
       @schema.class_name.should == 'SomeClass'
-    end
-  
-    it 'should handle tables with a singular name that ends with s' do
-      @schema.class_name_for('ADDRESS').should == 'Address'
-    end
-  
-    it 'should handle tables with an irregular pluralization name' do
-      @schema.class_name_for('TBPERSON').should == 'Tbperson'
-    end
-    
-    describe 'ignore the table prefix naming convention when figuring out the model name' do
-      before :each do
-        @schema = LegacyData::Schema.new('some_table', /^TB(.*)$/)
-      end
-      
-      it 'should strip off the prefix' do
-        @schema.class_name_for('TBPERSON').should == 'Person'
-      end
-
-      it 'should work on tables that do not have the prefix' do
-        @schema.class_name_for('PERSON').should == 'Person'
-      end
     end
   
     it 'should have the correct primary_key' do
@@ -74,7 +75,7 @@ describe LegacyData::Schema do
     it 'should get all "has_some" (has_many and has_one) relationships when my primary key is the foreign key in another table ' do
       @connection.should_receive(:respond_to?).with(:foreign_keys_of).and_return(true)
       @connection.should_receive(:foreign_keys_of).and_return([['OTHER_TABLE', 'PK'], ['THE_TABLE', 'PK']])
-      @schema.has_some_relations.should == {:other_tables => :pk, :the_tables => :pk}
+      @schema.has_some_relations.should == {'other_table' => :pk, 'the_table' => :pk}
     end
   
     it 'should give no "belongs_to" when the adapter does not support foreign keys' do
@@ -85,7 +86,7 @@ describe LegacyData::Schema do
     it 'should get all "belongs_to" relationships when a foreign key is in my table' do
       @connection.should_receive(:respond_to?).with(:foreign_keys_for).and_return(true)
       @connection.should_receive(:foreign_keys_for).and_return([['OTHER_TABLE', 'FK_1'], ['THE_TABLE', 'the_table_id']])
-      @schema.belongs_to_relations.should == {:other_table => :fk_1, :the_table => :the_table_id}
+      @schema.belongs_to_relations.should == {'other_table' => :fk_1, 'the_table' => :the_table_id}
     end
   
     it 'should have the correct constraints'

@@ -3,11 +3,11 @@ class <%= class_name -%> < ActiveRecord::Base
   <%= "set_primary_key #{primary_key.inspect}" if primary_key %>
   
   # Relationships
-  <%- relations[:has_some].each do |class_name, foreign_key| 
-  -%>  has_many   <%= class_name.inspect %>, :foreign_key => <%= foreign_key.inspect %>
+  <%- relations[:has_some].each do |table_name, foreign_key| 
+  -%>  has_many   <%= LegacyData::TableClassNameMapper.class_name_for(table_name).underscore.pluralize.to_sym.inspect %>, :foreign_key => <%= foreign_key.inspect %>
   <%- end -%>
-  <%- relations[:belongs_to].each do |class_name, foreign_key| 
-  -%>  belongs_to <%= class_name.inspect %>, :foreign_key => <%= foreign_key.inspect %>
+  <%- relations[:belongs_to].each do |table_name, foreign_key| 
+  -%>  belongs_to <%= LegacyData::TableClassNameMapper.class_name_for(table_name).underscore.to_sym.inspect %>, :foreign_key => <%= foreign_key.inspect %>
   <%- end -%>
 
   # Constraints

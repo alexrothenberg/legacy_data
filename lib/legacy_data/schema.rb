@@ -2,13 +2,41 @@ module LegacyData
   class Schema
     attr_reader :table_name
     
-    def initialize(table_name, naming_convention=nil)
+    def self.analyze(options={})
+      analyzed_schema = []
+
+      @tables = {}
+      if options[:table_name]
+        @tables[options[:table_name]] = :pending
+      else
+        LegacyData::Schema.tables.each {|table| @tables[table] = :pending }
+      end
+      
+      while table_name = next_table_to_process
+        # puts "      Tables: #{@tables.inspect}"
+        @tables[table_name] = analyze_table(table_name)
+
+        [:has_some, :belongs_to].each do |relation_type| 
+          associated_tables = @tables[table_name][:relations][relation_type].keys.map(&:to_s) 
+          associated_tables.each {|associated_table| @tables[associated_table] = :pending if @tables[associated_table].nil? }
+        end
+      end
+      @tables.values
+    end
+    def self.analyze_table table_name
+      new(table_name).analyze_table
+    end
+    
+    def self.next_table_to_process
+      @tables.keys.detect {|table_name| @tables[table_name] == :pending }
+    end
+    
+    def initialize(table_name)
       @table_name        = table_name
-      @naming_convention = naming_convention
-      @naming_convention = /^#{naming_convention.gsub('*', '(.*)')}$/i if @naming_convention.is_a? String
     end
     
     def analyze_table
+      puts "analyzing #{table_name} => #{class_name}"
       { :table_name   => table_name,
         :class_name   => class_name,
         :primary_key  => primary_key,
@@ -21,16 +49,8 @@ module LegacyData
       connection.tables.select {|table_name| table_name =~ name_pattern }.sort
     end
     
-    
-    
     def class_name
-      class_name_for(self.table_name)
-    end
-
-    def class_name_for table
-      table =~ @naming_convention
-      stripped_table_name = $1 || table
-      ActiveRecord::Base.class_name(stripped_table_name.downcase.pluralize)
+      TableClassNameMapper.class_name_for(self.table_name)
     end
 
     def primary_key
@@ -49,8 +69,7 @@ module LegacyData
       
       belongs_to = {}
       connection.foreign_keys_for(table_name).each do |relation|
-        class_name = class_name_for(relation.first).underscore.to_sym
-        belongs_to[class_name] = relation.second.downcase.to_sym
+        belongs_to[relation.first.downcase] = relation.second.downcase.to_sym
       end
       belongs_to
     end
@@ -59,8 +78,7 @@ module LegacyData
 
       has_some = {}
       connection.foreign_keys_of(table_name).each do |relation|
-        class_name = class_name_for(relation.first).underscore.pluralize.to_sym
-        has_some[class_name] = relation.second.downcase.to_sym
+        has_some[relation.first.downcase] = relation.second.downcase.to_sym
       end
       has_some
     end
