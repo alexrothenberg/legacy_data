@@ -11,21 +11,16 @@ module LegacyData
       @dictionary ||= load_dictionary
     end
 
-    def self.naming_convention= value
-      instance.naming_convention = value
+    def self.method_missing(method_id, *arguments, &block)
+      instance.send(method_id, *arguments, &block)
     end
-    def self.load_dictionary
-      instance.load_dictionary
-    end
-    def self.save_dictionary
-      instance.save_dictionary
-    end
-    def self.dictionary_file_name
-      instance.dictionary_file_name
+
+    def clear_dictionary
+      @dictionary = nil
     end
 
     def load_dictionary
-      @dictionary = nil
+      clear_dictionary
       File.exists?(dictionary_file_name) ? YAML.load_file(dictionary_file_name) : {}
     end
 
@@ -39,8 +34,8 @@ module LegacyData
       File.join(RAILS_ROOT, 'app', 'models', 'table_mappings.yml')
     end
     
-    def self.class_name_for table_name
-      instance.lookup_class_name(table_name) || instance.compute_class_name(table_name)
+    def class_name_for table_name
+      lookup_class_name(table_name) || compute_class_name(table_name)
     end
 
     def lookup_class_name table_name

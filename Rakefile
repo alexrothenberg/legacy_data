@@ -29,6 +29,7 @@ Spec::Rake::SpecTask.new(:rcov) do |spec|
   spec.libs << 'lib' << 'spec'
   spec.pattern = 'spec/**/*_spec.rb'
   spec.rcov = true
+  spec.rcov_opts = ['--exclude spec,gems', '--sort coverage']
 end
 
 task :spec => :check_dependencies
