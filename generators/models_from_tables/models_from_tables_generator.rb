@@ -1,3 +1,4 @@
+require File.dirname(__FILE__) + '/../../lib/legacy_data/table_definition'
 require File.dirname(__FILE__) + '/../../lib/legacy_data/schema'
 require File.dirname(__FILE__) + '/../../lib/legacy_data/table_class_name_mapper'
 require File.dirname(__FILE__) + '/../../lib/active_record/connection_adapters/oracle_enhanced_adapter'
@@ -20,11 +21,11 @@ Done analyzing the tables.
       LegacyData::TableClassNameMapper.load_dictionary
 
       analyzed_tables.each do |analyzed_table|
-        analyzed_table[:class_name] = LegacyData::TableClassNameMapper.class_name_for(analyzed_table[:table_name])
+        analyzed_table.class_name = LegacyData::TableClassNameMapper.class_name_for(analyzed_table[:table_name])
         m.class_collisions :class_path, analyzed_table[:class_name]
         m.template           'model.rb',      
                              File.join('app/models', "#{analyzed_table[:class_name].underscore}.rb"), 
-                             :assigns => analyzed_table
+                             :assigns => analyzed_table.to_hash
       end
     end
   end

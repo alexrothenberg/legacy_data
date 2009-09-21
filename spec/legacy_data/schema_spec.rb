@@ -3,8 +3,8 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe LegacyData::Schema do
   describe 'following associations' do
     before :each do
-      LegacyData::Schema.stub!(:analyze_table).with('posts'   ).and_return(@posts_analysis   =mock)
-      LegacyData::Schema.stub!(:analyze_table).with('comments').and_return(@comments_analysis=mock)
+      LegacyData::Schema.stub!(:analyze_table).with('posts'   ).and_return(@posts_analysis   =mock(:posts,    {:join_table? =>false}))
+      LegacyData::Schema.stub!(:analyze_table).with('comments').and_return(@comments_analysis=mock(:comments, {:join_table? =>false}))
       @posts_analysis.stub!(   :[]).with(:relations).and_return({:belongs_to=>{                 }, :has_some=>{:comments=>:posts_id}})
       @comments_analysis.stub!(:[]).with(:relations).and_return({:belongs_to=>{:posts=>:posts_id}, :has_some=>{                    }})
     end
@@ -37,11 +37,6 @@ describe LegacyData::Schema do
     LegacyData::Schema.tables.should == ['comments', 'people', 'posts']
   end
 
-  it "should get a filtered list of the tables from the database" do
-    @connection.should_receive(:tables).and_return(['comments', 'people', 'posts'])
-    LegacyData::Schema.tables(/^p/).should == ['people', 'posts']
-  end
-  
   describe 'analyzing a table' do
     before :each do
       @schema = LegacyData::Schema.new('some_table')
@@ -49,11 +44,16 @@ describe LegacyData::Schema do
     end
     
     it 'should have all the information about the table' do  
-      @schema.stub!(:class_name)
-      @schema.stub!(:primary_key)
-      @schema.stub!(:relations)
-      @schema.stub!(:constraints)
-      @schema.analyze_table.keys.should include(:table_name, :class_name, :primary_key, :relations, :constraints)
+      @schema.stub!(:class_name  ).and_return(class_name =mock)
+      @schema.stub!(:column_names).and_return(columns    =mock)
+      @schema.stub!(:primary_key ).and_return(primary_key=mock)
+      @schema.stub!(:relations   ).and_return(relations  =mock)
+      @schema.stub!(:constraints ).and_return(constraints=mock)
+      @schema.analyze_table[:table_name ].should == 'some_table'
+      @schema.analyze_table[:columns    ].should == columns
+      @schema.analyze_table[:primary_key].should == primary_key
+      @schema.analyze_table[:relations  ].should == relations
+      @schema.analyze_table[:constraints].should == constraints
     end
     
     it 'should have the correct table name' do
@@ -70,12 +70,17 @@ describe LegacyData::Schema do
       @schema.primary_key.should == 'PK'
     end
   
+    it 'should have the names of all columns' do
+      @schema.should_receive(:columns).and_return([col1=mock(:col1, :name=>'Col1'), col2=mock(:col2, :name=>'Col2')])
+      @schema.column_names.sort.should == ['Col1', 'Col2'] 
+    end
+  
     describe 'relations' do
       it 'should have the different types of relations' do
         @schema.stub!(:belongs_to_relations).and_return([belongs_to=mock])
         @schema.stub!(:has_some_relations  ).and_return([has_some  =mock])
 
-        @schema.relations.should == {:belongs_to=>[belongs_to], :has_some=>[has_some]}
+        @schema.relations.should == {:belongs_to=>[belongs_to], :has_some=>[has_some], :has_and_belongs_to_many=>{}}
       end
 
       
@@ -137,7 +142,35 @@ describe LegacyData::Schema do
         @connection.should_receive(:constraints).and_return([['SomeConstraint', 'custom sql 1'], ['anotherconstraint', 'more custom sql']])
         @schema.custom_constraints.should == {:some_constraint => 'custom sql 1', :anotherconstraint => 'more custom sql'}
       end
-    end
+    end  
+  end
   
+  describe 'convert join tables into HABTM relations' do
+    before :each do
+      LegacyData::Schema.clear_table_definitions
+      LegacyData::Schema.table_definitions['posts'    ] = @posts_table         =mock(:posts,     :join_table? => false)
+      LegacyData::Schema.table_definitions['tags'     ] = @tags_table          =mock(:tags,      :join_table? => false)
+      LegacyData::Schema.table_definitions['tag_posts'] = @tag_posts_join_table=mock(:tag_posts, :join_table? => true )
+    end
+
+    it 'should remove the join table from the list of tables' do
+      @tag_posts_join_table.stub!(:belongs_to_tables).and_return(['posts', 'tags'])
+      @posts_table.should_receive(:convert_has_many_to_habtm).with(@tag_posts_join_table)
+      @tags_table.should_receive( :convert_has_many_to_habtm).with(@tag_posts_join_table)
+
+      analyzed_tables = LegacyData::Schema.remove_join_tables
+
+      analyzed_tables.should      include(@posts_table, @tags_table)
+      analyzed_tables.size.should == 2
+    end
+    
+    it 'should find the next join table' do
+      LegacyData::Schema.next_join_table.should == 'tag_posts'
+    end
+
+    it 'should know when there are no join tables' do
+      LegacyData::Schema.table_definitions.delete('tag_posts')
+      LegacyData::Schema.next_join_table.should == nil
+    end
   end
 end

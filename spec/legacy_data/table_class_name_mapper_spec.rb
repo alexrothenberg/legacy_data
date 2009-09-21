@@ -63,7 +63,7 @@ describe LegacyData::TableClassNameMapper do
       @dictionary_file_name = LegacyData::TableClassNameMapper.dictionary_file_name
     end
     after :each do
-      Object.send (:remove_const, :RAILS_ROOT) if RAILS_ROOT=='test_rails_root'
+      Object.send(:remove_const, :RAILS_ROOT) if RAILS_ROOT=='test_rails_root'
     end
 
     it 'should load the dictionary from a file' do

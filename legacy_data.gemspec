@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alex Rothenberg"]
-  s.date = %q{2009-09-20}
+  s.date = %q{2009-09-21}
   s.description = %q{Create ActiveRecord models from an existing database}
   s.email = %q{alex@alexrothenberg.com}
   s.extra_rdoc_files = [
@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
      "lib/active_record/connection_adapters/oracle_enhanced_adapter.rb",
      "lib/legacy_data.rb",
      "lib/legacy_data/schema.rb",
+     "lib/legacy_data/table_definition.rb",
      "lib/legacy_data/table_class_name_mapper.rb",
      "spec/legacy_data/schema_spec.rb",
      "spec/legacy_data/table_class_name_mapper_spec.rb",
@@ -44,6 +45,7 @@ Gem::Specification.new do |s|
   s.test_files = [
     "spec/legacy_data/schema_spec.rb",
      "spec/legacy_data/table_class_name_mapper_spec.rb",
+     "spec/legacy_data/table_definition_spec.rb",
      "spec/spec_helper.rb"
   ]
 
