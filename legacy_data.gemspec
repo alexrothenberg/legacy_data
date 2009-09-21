@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{legacy_data}
-  s.version = "0.0.8"
+  s.version = "0.0.9"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alex Rothenberg"]
@@ -30,10 +30,11 @@ Gem::Specification.new do |s|
      "lib/active_record/connection_adapters/oracle_enhanced_adapter.rb",
      "lib/legacy_data.rb",
      "lib/legacy_data/schema.rb",
-     "lib/legacy_data/table_definition.rb",
      "lib/legacy_data/table_class_name_mapper.rb",
+     "lib/legacy_data/table_definition.rb",
      "spec/legacy_data/schema_spec.rb",
      "spec/legacy_data/table_class_name_mapper_spec.rb",
+     "spec/legacy_data/table_definition_spec.rb",
      "spec/spec_helper.rb"
   ]
   s.has_rdoc = true
