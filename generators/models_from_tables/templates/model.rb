@@ -3,13 +3,13 @@ class <%= class_name -%> < ActiveRecord::Base
   <%= "set_primary_key #{primary_key.to_sym.inspect}" if primary_key %>
   
   # Relationships
-  <%- relations[:has_some               ].each do |table_name, foreign_key| 
-  -%>  has_many                <%= LegacyData::TableClassNameMapper.class_name_for(table_name).underscore.pluralize.to_sym.inspect %>, :foreign_key => <%= foreign_key.inspect %>
+  <%- relations[:has_some               ].each do |table_name, options| 
+  -%>  has_many                <%= LegacyData::TableClassNameMapper.class_name_for(table_name).underscore.pluralize.to_sym.inspect %><% options.each {|key, value| %>, <%="#{key.inspect} => #{value.inspect} "%> <%} %>
   <%- end -%>
   <%- relations[:belongs_to             ].each do |table_name, foreign_key| 
   -%>  belongs_to              <%= LegacyData::TableClassNameMapper.class_name_for(table_name).underscore.to_sym.inspect           %>, :foreign_key => <%= foreign_key.inspect %>
   <%- end -%>
-  <%- relations[:has_and_belongs_to_many].each do |table_name, options|  
+  <%- relations[:has_and_belongs_to_many].each do |table_name, opts|  
   -%>  has_and_belongs_to_many <%= LegacyData::TableClassNameMapper.class_name_for(table_name).underscore.pluralize.to_sym.inspect %>, :foreign_key => <%= options[:foreign_key].inspect%>, :association_foreign_key => <%= options[:association_foreign_key].inspect%>, :join_table => <%= options[:join_table].inspect %>
   <%- end -%>
 

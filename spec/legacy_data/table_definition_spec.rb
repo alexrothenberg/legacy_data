@@ -59,7 +59,7 @@ describe LegacyData::TableDefinition do
         @posts.convert_has_many_to_habtm(@tag_posts)
         
         @posts.relations[:has_some               ].should == {}
-        @posts.relations[:has_and_belongs_to_many].should == {'tags' => {:foreign_key=>:posts_id, :association_foreign_key=>:tags_id, :join_table=>"tag_posts"} }
+        @posts.relations[:has_and_belongs_to_many].should == {'tags' => {:foreign_key=>:posts_id, :association_foreign_key=>:tags_id, :join_table=>:tag_posts} }
       end
     end
   end

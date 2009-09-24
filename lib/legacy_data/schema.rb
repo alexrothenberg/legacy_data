@@ -105,7 +105,7 @@ module LegacyData
 
       has_some = {}
       connection.foreign_keys_of(table_name).each do |relation|
-        has_some[relation.first.downcase] = relation.second.downcase.to_sym
+        has_some[relation.delete(:to_table).downcase] = relation
       end
       has_some
     end

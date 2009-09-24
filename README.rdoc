@@ -24,7 +24,7 @@ Examples:
 * Configure your application to connect to your existing Oracle database.  Get the connect connect string from your dba (something like: user/password@server.example.com:1541/sid.world) and edit your config/database.yml
 development:
   adapter: oracle_enhanced
-  database: server.example.com:1541/sid.world
+  database: server.example.com:1541/my_database.world
   username: user
   password: password
 * Generate models for all existing tables

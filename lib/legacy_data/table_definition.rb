@@ -34,7 +34,7 @@ module LegacyData
       other_table_name = join_table.belongs_to_tables.detect {|table_name| table_name != self.table_name}
       relations[:has_and_belongs_to_many][other_table_name] = { :foreign_key            =>join_table.belongs_to_relations[table_name], 
                                                                 :association_foreign_key=>join_table.belongs_to_relations[other_table_name],
-                                                                :join_table             =>join_table.table_name }
+                                                                :join_table             =>join_table.table_name.to_sym }
       relations[:has_some].delete(join_table.table_name)                                                          
     end
   end

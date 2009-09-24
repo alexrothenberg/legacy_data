@@ -91,8 +91,10 @@ describe LegacyData::Schema do
   
       it 'should get all "has_some" (has_many and has_one) relationships when my primary key is the foreign key in another table ' do
         @connection.should_receive(:respond_to?).with(:foreign_keys_of).and_return(true)
-        @connection.should_receive(:foreign_keys_of).and_return([['OTHER_TABLE', 'PK'], ['THE_TABLE', 'PK']])
-        @schema.has_some_relations.should == {'other_table' => :pk, 'the_table' => :pk}
+        @connection.should_receive(:foreign_keys_of).and_return([ {:to_table=>'other_table', :foreign_key=>:pk, :dependent=>:destroy}, 
+                                                                  {:to_table=>'the_table',   :foreign_key=>:pk, :dependent=>:destroy} ])
+        @schema.has_some_relations.should == {'other_table' => {:foreign_key=>:pk, :dependent=>:destroy}, 
+                                              'the_table' => {:foreign_key=>:pk, :dependent=>:destroy}}
       end
   
       it 'should give no "belongs_to" when the adapter does not support foreign keys' do
