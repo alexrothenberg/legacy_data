@@ -30,7 +30,7 @@ module OracleEnhancedAdapterConstraintsMethods
         and cc.constraint_name = c.constraint_name
     SQL
     fks.map do |row| 
-      dependent = case row[3] 
+      dependent = case row[2] 
         when 'CASCADE'
           :destroy
         when 'SET NULL'
