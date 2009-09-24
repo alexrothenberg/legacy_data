@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{legacy_data}
-  s.version = "0.0.9"
+  s.version = "0.0.10"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alex Rothenberg"]
-  s.date = %q{2009-09-21}
+  s.date = %q{2009-09-24}
   s.description = %q{Create ActiveRecord models from an existing database}
   s.email = %q{alex@alexrothenberg.com}
   s.extra_rdoc_files = [
