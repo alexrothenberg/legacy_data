@@ -5,8 +5,8 @@ describe LegacyData::Schema do
     before :each do
       LegacyData::Schema.stub!(:analyze_table).with('posts'   ).and_return(@posts_analysis   =mock(:posts,    {:join_table? =>false}))
       LegacyData::Schema.stub!(:analyze_table).with('comments').and_return(@comments_analysis=mock(:comments, {:join_table? =>false}))
-      @posts_analysis.stub!(   :[]).with(:relations).and_return({:belongs_to=>{                 }, :has_some=>{:comments=>:posts_id}})
-      @comments_analysis.stub!(:[]).with(:relations).and_return({:belongs_to=>{:posts=>:posts_id}, :has_some=>{                    }})
+      @posts_analysis.stub!(   :[]).with(:relations).and_return({:belongs_to=>{                                 }, :has_many=>{:comments=>{:foreign_key=>:posts_id}}})
+      @comments_analysis.stub!(:[]).with(:relations).and_return({:belongs_to=>{:posts=>{:foreign_key=>:posts_id}}, :has_many=>{                                    }})
     end
     
     it 'should analyze all tables when not given a table to start with' do
@@ -80,7 +80,7 @@ describe LegacyData::Schema do
         @schema.stub!(:belongs_to_relations).and_return([belongs_to=mock])
         @schema.stub!(:has_some_relations  ).and_return([has_some  =mock])
 
-        @schema.relations.should == {:belongs_to=>[belongs_to], :has_some=>[has_some], :has_and_belongs_to_many=>{}}
+        @schema.relations.should == {:belongs_to=>[belongs_to], :has_many=>[has_some], :has_and_belongs_to_many=>{}}
       end
 
       
@@ -105,7 +105,8 @@ describe LegacyData::Schema do
       it 'should get all "belongs_to" relationships when a foreign key is in my table' do
         @connection.should_receive(:respond_to?).with(:foreign_keys_for).and_return(true)
         @connection.should_receive(:foreign_keys_for).and_return([['OTHER_TABLE', 'FK_1'], ['THE_TABLE', 'the_table_id']])
-        @schema.belongs_to_relations.should == {'other_table' => :fk_1, 'the_table' => :the_table_id}
+        @schema.belongs_to_relations.should == {'other_table' => {:foreign_key=>:fk_1        }, 
+                                                'the_table'   => {:foreign_key=>:the_table_id} }
       end
     end
 

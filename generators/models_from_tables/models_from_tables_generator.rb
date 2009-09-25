@@ -28,6 +28,8 @@ Done analyzing the tables.
                              :assigns => analyzed_table.to_hash
       end
     end
+  rescue => e
+    puts e.backtrace
   end
 
 protected

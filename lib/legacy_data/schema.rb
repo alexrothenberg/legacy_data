@@ -8,7 +8,7 @@ module LegacyData
       while table_name = next_table_to_process
         table_definitions[table_name] = analyze_table(table_name)
 
-        [:has_some, :belongs_to].each do |relation_type| 
+        [:has_many, :belongs_to].each do |relation_type| 
           associated_tables = table_definitions[table_name][:relations][relation_type].keys.map(&:to_s) 
           associated_tables.each {|associated_table| add_pending_table(associated_table) }
         end
@@ -86,7 +86,7 @@ module LegacyData
 
     def relations
       { :belongs_to               => belongs_to_relations,
-        :has_some                 => has_some_relations,
+        :has_many                 => has_some_relations,
         :has_and_belongs_to_many  => {}
       }
     end
@@ -96,7 +96,7 @@ module LegacyData
       
       belongs_to = {}
       connection.foreign_keys_for(table_name).each do |relation|
-        belongs_to[relation.first.downcase] = relation.second.downcase.to_sym
+        belongs_to[relation.first.downcase] = {:foreign_key=>relation.second.downcase.to_sym}
       end
       belongs_to
     end
