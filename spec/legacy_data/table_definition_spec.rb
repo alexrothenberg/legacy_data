@@ -23,7 +23,8 @@ describe LegacyData::TableDefinition do
   describe 'join table' do
     before :each do
       @foreign_key_columns = ['one_table_id',               'another_table_id']
-      @belongs_to_relation = {'one_table' => :one_table_id, 'another_table' => :another_table_id}
+      @belongs_to_relation = {'one_table'     => {:foreign_key=>:one_table_id    }, 
+                              'another_table' => {:foreign_key=>:another_table_id} }
     end
     it 'should be a join table when it has only 2 columns and both are foreign keys' do
       table_definition = LegacyData::TableDefinition.new(:columns=>@foreign_key_columns,                       :relations=> {:belongs_to=>@belongs_to_relation})
@@ -42,9 +43,15 @@ describe LegacyData::TableDefinition do
     
     describe 'creating habtm' do
       before :each do
-        @posts     = LegacyData::TableDefinition.new(:table_name=>'posts',     :relations=>{:has_some=>{'tag_posts' => :posts_id}, :has_and_belongs_to_many=>{}})
-        @tags      = LegacyData::TableDefinition.new(:table_name=>'tags',      :relations=>{:has_some=>{'tag_posts' => :tags_id }, :has_and_belongs_to_many=>{}})
-        @tag_posts = LegacyData::TableDefinition.new(:table_name=>'tag_posts', :relations=>{:belongs_to=>{'posts' => :posts_id, 'tags' => :tags_id}})
+        @posts     = LegacyData::TableDefinition.new(:table_name=>'posts',     
+                                                     :relations=>{:has_many               =>{'tag_posts' => {:foreign_key=>:posts_id} },
+                                                                  :has_and_belongs_to_many=>{                                         } })
+        @tags      = LegacyData::TableDefinition.new(:table_name=>'tags',      
+                                                     :relations=>{:has_many               =>{'tag_posts' => {:foreign_key=>:tags_id } }, 
+                                                                  :has_and_belongs_to_many=>{                                         } })
+        @tag_posts = LegacyData::TableDefinition.new(:table_name=>'tag_posts', 
+                                                     :relations=>{:belongs_to             =>{'posts'     => {:foreign_key=>:posts_id}, 
+                                                                                             'tags'      => {:foreign_key=>:tags_id } } })
       end
 
       describe 'belonging to tables' do
@@ -58,7 +65,7 @@ describe LegacyData::TableDefinition do
       it 'should convert a has_many into a habtm' do
         @posts.convert_has_many_to_habtm(@tag_posts)
         
-        @posts.relations[:has_some               ].should == {}
+        @posts.relations[:has_many               ].should == {}
         @posts.relations[:has_and_belongs_to_many].should == {'tags' => {:foreign_key=>:posts_id, :association_foreign_key=>:tags_id, :join_table=>:tag_posts} }
       end
     end

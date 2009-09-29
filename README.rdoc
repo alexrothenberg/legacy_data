@@ -7,15 +7,15 @@ What if there are a lot of tables? ... not a problem
 What about all the information contained in the database already (relationships, constraints, etc) ... they are extracted into your models
 
 Usage: script/generate models_from_tables [options]
-        --table-name [ARG] Only generate models for tables starting with
-        --table-naming-convention [ARG]
+        table-name [ARG] Only generate models for tables starting with
+        table-naming-convention [ARG]
                                      Naming convention for tables in the database. Only the wildcard is used when generating the model name
 
 Examples:
 * script/generate script/generate models_from_tables --table-naming-convention=tb*
   Generate a model for each table in the database.  The tables all start with a tb (i.e. table 'tbperson' will generate the model 'person')
 * script/generate script/generate models_from_tables --table-name tbperson 
-  Generate a model for the 'tbperson' table in the database. 
+  Generate a model for the 'tbperson' table in the database and all associated tables.  has_many and belongs_to will be generated in the models 
 
 == Usage
 
@@ -24,9 +24,9 @@ Examples:
 * Configure your application to connect to your existing Oracle database.  Get the connect connect string from your dba (something like: user/password@server.example.com:1541/sid.world) and edit your config/database.yml
 development:
   adapter: oracle_enhanced
-  database: server.example.com:1541/my_database.world
-  username: user
-  password: password
+  database: my.oracle.server.com:1541/my_database.world
+  username: user_name
+  password: my_secret_password
 * Generate models for all existing tables
   script/generate models_for_all
 * Take a look

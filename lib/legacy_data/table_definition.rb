@@ -17,7 +17,7 @@ module LegacyData
     end
     
     def join_table?
-      (columns.size == 2) and relations[:belongs_to] and (relations[:belongs_to].values.map(&:to_s) == columns)
+      (columns.size == 2) and relations[:belongs_to] and (relations[:belongs_to].values.map {|value| value[:foreign_key]}.map(&:to_s) == columns)
     end
     
     def belongs_to_relations
@@ -32,10 +32,10 @@ module LegacyData
     
     def convert_has_many_to_habtm(join_table)
       other_table_name = join_table.belongs_to_tables.detect {|table_name| table_name != self.table_name}
-      relations[:has_and_belongs_to_many][other_table_name] = { :foreign_key            =>join_table.belongs_to_relations[table_name], 
-                                                                :association_foreign_key=>join_table.belongs_to_relations[other_table_name],
+      relations[:has_and_belongs_to_many][other_table_name] = { :foreign_key            =>join_table.belongs_to_relations[table_name][:foreign_key], 
+                                                                :association_foreign_key=>join_table.belongs_to_relations[other_table_name][:foreign_key],
                                                                 :join_table             =>join_table.table_name.to_sym }
-      relations[:has_some].delete(join_table.table_name)                                                          
+      relations[:has_many].delete(join_table.table_name)                                                          
     end
   end
 end
