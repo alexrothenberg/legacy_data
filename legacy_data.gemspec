@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "VERSION",
+     "examples/j2ee_petstore.sql",
      "generators/models_from_tables/USAGE",
      "generators/models_from_tables/models_from_tables_generator.rb",
      "generators/models_from_tables/templates/model.rb",
