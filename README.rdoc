@@ -28,7 +28,7 @@ development:
   username: user_name
   password: my_secret_password
 * Generate models for all existing tables
-  script/generate models_for_all
+  script/generate models_from_tables
 * Take a look
   script/server
   http://localhost:3000/admin_data
