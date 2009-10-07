@@ -112,11 +112,36 @@ describe LegacyData::Schema do
 
     describe 'constraints' do
       it 'should have the different types of constraints' do
-        @schema.stub!(:unique_constraints      ).and_return([['unique_col'], ['col1', 'col2']])
-        @schema.stub!(:non_nullable_constraints).and_return([non_nullable=mock               ])
-        @schema.stub!(:custom_constraints      ).and_return([custom      =mock               ])
+        @schema.stub!(:uniqueness_constraints).and_return([unique          =[mock], multi_column_unique=[mock]])
+        @schema.stub!(:presence_constraints  ).and_return([boolean_presence=[mock], presence_of        =[mock]])
+        @schema.stub!(:integer_column_names  ).and_return(int_col_names   =[mock])
+        @schema.stub!(:custom_constraints    ).and_return(custom          =[mock])
 
-        @schema.constraints.should == {:unique=>[['unique_col']], :multi_column_unique=>[['col1', 'col2']], :non_nullable=>[non_nullable], :custom=>[custom]}
+        @schema.constraints.should == {:unique             =>unique,
+                                       :multi_column_unique=>multi_column_unique,
+                                       :boolean_presence   =>boolean_presence,
+                                       :presence_of        =>presence_of,
+                                       :numericality_of    =>int_col_names,
+                                       :custom             =>custom }
+      end
+
+      it 'should have the uniqueness constraints (booleans are done differently)' do
+        @schema.stub!(:unique_constraints      ).and_return([['unique_col'],  
+                                                             ['col1', 'col2'], 
+                                                             ['another_col'],
+                                                             ['col3', 'col4']])
+
+        @schema.uniqueness_constraints.should == [ ['unique_col'    , 'another_col'   ], 
+                                                   [['col1', 'col2'], ['col3', 'col4']]
+                                                 ]
+      end
+
+      it 'should have the different types of constraints' do
+        @schema.stub!(:non_nullable_constraints).and_return(['int_col', 'bool_col'])
+        @schema.stub!(:column_by_name          ).with('int_col' ).and_return(stub(:type=>:integer))
+        @schema.stub!(:column_by_name          ).with('bool_col').and_return(stub(:type=>:boolean))
+
+        @schema.presence_constraints.should == [ ['bool_col'], ['int_col']]
       end
 
       it 'should get non-nullable constraints as all columns that do not allow null except the primary key' do

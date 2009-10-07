@@ -38,6 +38,8 @@ protected
           'Only generate models for given table') { |value| options[:table_name] = value }
     opt.on('--table-naming-convention [ARG]', 
           'Naming convention for tables in the database - will not be used when generating naming the models') { |value| options[:table_naming_convention] = value }
+    opt.on('--skip-associated', 
+          'Do not follow foreign keys to model associated tables') { |value| options[:skip_associated] = true }
   end
   
 end

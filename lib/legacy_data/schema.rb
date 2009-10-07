@@ -8,14 +8,16 @@ module LegacyData
       while table_name = next_table_to_process
         table_definitions[table_name] = analyze_table(table_name)
 
-        [:has_many, :belongs_to].each do |relation_type| 
-          associated_tables = table_definitions[table_name][:relations][relation_type].keys.map(&:to_s) 
-          associated_tables.each {|associated_table| add_pending_table(associated_table) }
+        unless options[:skip_associated]
+          [:has_many, :belongs_to].each do |relation_type| 
+            associated_tables = table_definitions[table_name][:relations][relation_type].keys.map(&:to_s) 
+            associated_tables.each {|associated_table| add_pending_table(associated_table) }
+          end
         end
       end
-
       remove_join_tables
     end
+
     def self.analyze_table table_name
       new(table_name).analyze_table
     end
@@ -111,14 +113,44 @@ module LegacyData
     end
 
     def constraints
-      unique, multi_column_unique = unique_constraints.partition {|columns| columns.size == 1}
-      { :unique              => unique,
-        :multi_column_unique => multi_column_unique,
-        :non_nullable        => non_nullable_constraints,
-        :custom              => custom_constraints
-      }
+      if @constraints.nil?
+        @constraints = {}
+      
+        @constraints[:unique],           @constraints[:multi_column_unique] = uniqueness_constraints
+        @constraints[:boolean_presence], @constraints[:presence_of]         = presence_constraints
+        @constraints[:numericality_of]                                      = integer_column_names
+        @constraints[:custom]                                               = custom_constraints
+      end
+      @constraints
+      ##### TO DO
+      # presence_of schoolparentid => school_parent     - FOREIGN KEY
+      # # booleans presence_of => inclusion_of
+      # integer numericality_of                         - INTEGER COLUMNS (except foreign keys)
+      # custom /(.*) IN \(.*\)/i => inclusion_of $1, :in=> %w($2)  -- TRY TO PARSE CUSTOM SQL RULES
+      # 
     end
     
+    def uniqueness_constraints
+      unique, multi_column_unique = unique_constraints.partition do |columns| 
+        columns.size == 1
+      end
+      [unique.map(&:first), multi_column_unique] 
+    end
+
+    def presence_constraints
+      boolean_presence, presence_of = non_nullable_constraints.partition do |column_name| 
+        column_by_name(column_name).type == :boolean 
+      end
+    end
+
+    def column_by_name name
+      columns.detect {|column| column.name == name }
+    end
+    
+    def integer_column_names
+      columns.select {|column| column.type == :integer }.map &:name
+    end
+
     def columns
       @columns ||= connection.columns(table_name, "#{table_name} Columns")
     end

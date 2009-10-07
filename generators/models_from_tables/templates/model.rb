@@ -16,11 +16,15 @@ class <%= class_name -%> < ActiveRecord::Base
   -%>
 
   # Constraints
-  <%= "validates_uniqueness_of #{constraints[:unique    ].map {|cols| cols.first.downcase.to_sym.inspect}.join(', ')}" unless constraints[:unique].blank? %>
+  <%= "validates_uniqueness_of #{constraints[:unique    ].map {|col| col.downcase.to_sym.inspect}.join(', ')}" unless constraints[:unique].blank? %>
   <%- constraints[:multi_column_unique].each do |cols| 
   -%>  #validates_uniqueness_of_multiple_column_constraint :<%= cols.inspect %>
   <%- end -%>
-  <%= "validates_presence_of #{constraints[:non_nullable].map {|cols| cols.downcase.to_sym.inspect}.join(', ')}" unless constraints[:non_nullable].blank? %>
+  <%= "validates_presence_of #{constraints[:presence_of].map {|cols| cols.downcase.to_sym.inspect}.join(', ')}" unless constraints[:presence_of].blank? %>
+  <%- constraints[:boolean_presence].each do |col| 
+      -%>  validates_inclusion_of    <%= col %>,       :in => %w(true false)
+  <%- end -%>
+  <%= "validates_numericality_of #{constraints[:numericality_of].map {|cols| cols.downcase.to_sym.inspect}.join(', ')}" unless constraints[:numericality_of].blank? %>
   <%- constraints[:custom].each do |name, sql_rule| 
   -%>  validate <%= "validate_#{name}".to_sym.inspect %>
   def <%= "validate_#{name}" %>
@@ -29,3 +33,4 @@ class <%= class_name -%> < ActiveRecord::Base
   end
   <%- end %>
 end
+
