@@ -59,7 +59,7 @@ describe LegacyData::TableClassNameMapper do
   
   describe 'persisting the dictionary' do
     before :each do
-      RAILS_ROOT = 'test_rails_root'
+      silence_warnings { RAILS_ROOT = 'test_rails_root' }
       @dictionary_file_name = LegacyData::TableClassNameMapper.dictionary_file_name
     end
     after :each do

@@ -40,7 +40,7 @@ describe LegacyData::Schema do
   describe 'analyzing a table' do
     before :each do
       @schema = LegacyData::Schema.new('some_table')
-      @schema.stub!(:puts)
+      @schema.stub!(:log)
     end
     
     it 'should have all the information about the table' do  
@@ -86,7 +86,7 @@ describe LegacyData::Schema do
       
       it 'should give no "has_some" (has_many and has_one) relationships when the adapter does not support foreign keys' do
         @connection.should_receive(:respond_to?).with(:foreign_keys_of).and_return(false)
-        @schema.has_some_relations.should == []
+        @schema.has_some_relations.should == {}
       end
   
       it 'should get all "has_some" (has_many and has_one) relationships when my primary key is the foreign key in another table ' do
@@ -99,7 +99,7 @@ describe LegacyData::Schema do
   
       it 'should give no "belongs_to" when the adapter does not support foreign keys' do
         @connection.should_receive(:respond_to?).with(:foreign_keys_for).and_return(false)
-        @schema.belongs_to_relations.should == []
+        @schema.belongs_to_relations.should == {}
       end
   
       it 'should get all "belongs_to" relationships when a foreign key is in my table' do

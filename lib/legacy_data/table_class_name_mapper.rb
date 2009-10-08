@@ -29,6 +29,17 @@ module LegacyData
         YAML.dump(dictionary, out)
       end
     end
+
+    def let_user_validate_dictionary
+      save_dictionary
+      self.class.log <<-MSG
+Done analyzing the tables.  
+  Please review the class names shown above.  If any do not look correct (for example it did not separate the words with CamelCase) please supply the correct mappings by editing the file #{LegacyData::TableClassNameMapper.dictionary_file_name}.  
+  Once you're done hit <enter> to continue generating the models"
+      MSG
+      gets
+      load_dictionary
+    end
     
     def dictionary_file_name
       File.join(RAILS_ROOT, 'app', 'models', 'table_mappings.yml')
@@ -46,6 +57,10 @@ module LegacyData
       table_name =~ /#{naming_convention}/i
       stripped_table_name = $1 || table_name
       dictionary[table_name] = ActiveRecord::Base.class_name(stripped_table_name.downcase.pluralize)
+    end
+    
+    def self.log msg
+      puts msg
     end
   end
 

@@ -64,7 +64,7 @@ module LegacyData
     end
     
     def analyze_table
-      puts "analyzing #{table_name} => #{class_name}"
+      log "analyzing #{table_name} => #{class_name}"
       TableDefinition.new(:table_name   => table_name,
                           :columns      => column_names,
                           :primary_key  => primary_key,
@@ -82,8 +82,11 @@ module LegacyData
     end
 
     def primary_key
-      pk_and_sequence_for = connection.pk_and_sequence_for(table_name)
-      pk_and_sequence_for.first if pk_and_sequence_for.respond_to? :first
+      if connection.respond_to?(:pk_and_sequence_for)
+        pk = connection.pk_and_sequence_for(table_name).first
+      elsif connection.respond_to?(:primary_key)
+        pk = connection.primary_key(table_name)
+      end
     end
 
     def relations
@@ -94,7 +97,7 @@ module LegacyData
     end
     
     def belongs_to_relations
-      return [] unless connection.respond_to? :foreign_keys_for
+      return {} unless connection.respond_to? :foreign_keys_for
       
       belongs_to = {}
       connection.foreign_keys_for(table_name).each do |relation|
@@ -103,7 +106,7 @@ module LegacyData
       belongs_to
     end
     def has_some_relations
-      return [] unless connection.respond_to? :foreign_keys_of
+      return {} unless connection.respond_to? :foreign_keys_of
 
       has_some = {}
       connection.foreign_keys_of(table_name).each do |relation|
@@ -174,6 +177,14 @@ module LegacyData
       end
       user_constraints
     end    
+
+    def log msg
+      self.class.log msg
+    end
+    def self.log msg
+      puts msg
+    end
+    
     private
     def self.connection 
       @conn ||= ActiveRecord::Base.connection
@@ -181,7 +192,6 @@ module LegacyData
     def connection
       self.class.connection
     end
-
-
+    
   end
 end

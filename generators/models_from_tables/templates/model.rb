@@ -16,7 +16,7 @@ class <%= class_name -%> < ActiveRecord::Base
   -%>
 
   # Constraints
-  <%= "validates_uniqueness_of #{constraints[:unique    ].map {|col| col.downcase.to_sym.inspect}.join(', ')}" unless constraints[:unique].blank? %>
+  <%= "validates_uniqueness_of #{constraints[:unique    ].map {|cols| cols.downcase.to_sym.inspect}.join(', ')}" unless constraints[:unique].blank? %>
   <%- constraints[:multi_column_unique].each do |cols| 
   -%>  #validates_uniqueness_of_multiple_column_constraint :<%= cols.inspect %>
   <%- end -%>
