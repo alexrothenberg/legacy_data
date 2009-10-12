@@ -24,13 +24,17 @@ class <%= class_name -%> < ActiveRecord::Base
   <%- constraints[:boolean_presence].each do |col| 
       -%>  validates_inclusion_of    <%= col %>,       :in => %w(true false)
   <%- end -%>
-  <%= "validates_numericality_of #{constraints[:numericality_of].map {|cols| cols.downcase.to_sym.inspect}.join(', ')}" unless constraints[:numericality_of].blank? %>
+  <%- [:allow_nil, :do_not_allow_nil].each do |nullable| 
+        unless constraints[:numericality_of][nullable].blank?
+    -%>  <%= "validates_numericality_of #{constraints[:numericality_of][nullable].map {|cols| cols.downcase.to_sym.inspect}.join(', ')}" %><%= ", {:allow_nil=>true}" if nullable == :allow_nil %>
+  <%-   end
+      end unless constraints[:numericality_of].blank? -%>
   <%- constraints[:custom].each do |name, sql_rule| 
   -%>  validate <%= "validate_#{name}".to_sym.inspect %>
   def <%= "validate_#{name}" %>
     # TODO: validate this SQL constraint 
     "<%= sql_rule %>"
   end
-  <%- end %>
+  <%- end -%>
 end
 

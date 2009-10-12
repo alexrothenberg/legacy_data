@@ -7,7 +7,7 @@ class Comment < ActiveRecord::Base
   # Constraints
   
   
-  validates_numericality_of :id, :post_id
-
+  validates_numericality_of :post_id, {:allow_nil=>true}
+  validates_numericality_of :id
 end
 

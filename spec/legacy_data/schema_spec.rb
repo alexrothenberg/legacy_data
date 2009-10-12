@@ -112,16 +112,16 @@ describe LegacyData::Schema do
 
     describe 'constraints' do
       it 'should have the different types of constraints' do
-        @schema.stub!(:uniqueness_constraints).and_return([unique          =[mock], multi_column_unique=[mock]])
-        @schema.stub!(:presence_constraints  ).and_return([boolean_presence=[mock], presence_of        =[mock]])
-        @schema.stub!(:integer_column_names  ).and_return(int_col_names   =[mock])
-        @schema.stub!(:custom_constraints    ).and_return(custom          =[mock])
+        @schema.stub!(:uniqueness_constraints  ).and_return([unique          =[mock], multi_column_unique=[mock]])
+        @schema.stub!(:presence_constraints    ).and_return([boolean_presence=[mock], presence_of        =[mock]])
+        @schema.stub!(:numericality_constraints).and_return(numericality={}                                      )
+        @schema.stub!(:custom_constraints      ).and_return(custom          =[mock])
 
         @schema.constraints.should == {:unique             =>unique,
                                        :multi_column_unique=>multi_column_unique,
                                        :boolean_presence   =>boolean_presence,
                                        :presence_of        =>presence_of,
-                                       :numericality_of    =>int_col_names,
+                                       :numericality_of    =>numericality,
                                        :custom             =>custom }
       end
 

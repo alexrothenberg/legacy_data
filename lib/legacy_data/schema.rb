@@ -122,7 +122,7 @@ module LegacyData
       
         @constraints[:unique],           @constraints[:multi_column_unique] = uniqueness_constraints
         @constraints[:boolean_presence], @constraints[:presence_of]         = presence_constraints
-        @constraints[:numericality_of]                                      = integer_column_names
+        @constraints[:numericality_of]                                      = numericality_constraints
         @constraints[:custom]                                               = custom_constraints
       end
       @constraints
@@ -134,6 +134,13 @@ module LegacyData
       # 
     end
     
+    def numericality_constraints
+      allow_nil, do_not_allow_nil = integer_columns.partition do |column| 
+        column.null
+      end
+      {:allow_nil=>allow_nil.map(&:name), :do_not_allow_nil=>do_not_allow_nil.map(&:name)}
+    end
+
     def uniqueness_constraints
       unique, multi_column_unique = unique_constraints.partition do |columns| 
         columns.size == 1
@@ -151,8 +158,8 @@ module LegacyData
       columns.detect {|column| column.name == name }
     end
     
-    def integer_column_names
-      columns.select {|column| column.type == :integer }.map &:name
+    def integer_columns
+      columns.select {|column| column.type == :integer }
     end
 
     def columns

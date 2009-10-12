@@ -8,6 +8,5 @@ class Post < ActiveRecord::Base
   
   
   validates_numericality_of :id
-
 end
 
