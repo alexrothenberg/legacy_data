@@ -83,10 +83,11 @@ module LegacyData
 
     def primary_key
       if connection.respond_to?(:pk_and_sequence_for)
-        pk = connection.pk_and_sequence_for(table_name).first
+        pk, seq = connection.pk_and_sequence_for(table_name)
       elsif connection.respond_to?(:primary_key)
         pk = connection.primary_key(table_name)
       end
+      pk
     end
 
     def relations

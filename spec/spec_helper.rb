@@ -1,6 +1,19 @@
 require 'rubygems'
 require 'activerecord'
-require 'active_record/connection_adapters/oracle_enhanced_adapter'
+# require 'active_record/connection_adapters/oracle_enhanced_adapter'
+
+## TODO parameterize this ....
+ActiveRecord::Base.establish_connection({:adapter=>'sqlite3', :database=> ":memory:"})
+
+ActiveRecord::Base.connection.create_table :posts do |t|
+  t.string :title
+  t.text   :body
+end
+ActiveRecord::Base.connection.create_table :comments do |t|
+  t.integer :post_id
+  t.text    :body
+end
+
 
 # $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))

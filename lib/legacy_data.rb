@@ -1,4 +1,12 @@
 require 'legacy_data/table_definition'
 require 'legacy_data/schema'
 require 'legacy_data/table_class_name_mapper'
-require 'active_record/connection_adapters/oracle_enhanced_adapter'
+
+
+module ActiveRecord  
+  Base.class_eval do
+    if ['OracleEnhanced'].include? connection.adapter_name
+      require "#{File.dirname(__FILE__)}/active_record/connection_adapters/#{connection.adapter_name.underscore}_adapter"
+    end
+  end
+end

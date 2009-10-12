@@ -23,8 +23,9 @@ class ModelsFromTablesGenerator < Rails::Generator::Base
                              :assigns => analyzed_table.to_hash
       end
     end
-#   rescue => e
-#     puts e.backtrace
+  rescue => e
+    # for debugging...
+    puts e.backtrace
   end
 
 protected
