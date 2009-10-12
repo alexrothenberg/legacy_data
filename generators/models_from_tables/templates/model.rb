@@ -22,7 +22,7 @@ class <%= class_name -%> < ActiveRecord::Base
   <%- end -%>
   <%= "validates_presence_of #{constraints[:presence_of].map {|cols| cols.downcase.to_sym.inspect}.join(', ')}" unless constraints[:presence_of].blank? %>
   <%- constraints[:boolean_presence].each do |col| 
-      -%>  validates_inclusion_of    <%= col %>,       :in => %w(true false)
+      -%>  validates_inclusion_of    <%= col.to_sym.inspect %>,       :in => %w(true false)
   <%- end -%>
   <%- [:allow_nil, :do_not_allow_nil].each do |nullable| 
         unless constraints[:numericality_of][nullable].blank?
@@ -33,7 +33,9 @@ class <%= class_name -%> < ActiveRecord::Base
   -%>  validate <%= "validate_#{name}".to_sym.inspect %>
   def <%= "validate_#{name}" %>
     # TODO: validate this SQL constraint 
-    "<%= sql_rule %>"
+    <<-SQL
+    <%= sql_rule %>
+    SQL
   end
   <%- end -%>
 end
