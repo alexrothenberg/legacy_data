@@ -2,6 +2,8 @@ require 'rubygems'
 require 'activerecord'
 # require 'active_record/connection_adapters/oracle_enhanced_adapter'
 
+
+
 ## TODO parameterize this ....
 ActiveRecord::Base.establish_connection({:adapter=>'sqlite3', :database=> ":memory:"})
 

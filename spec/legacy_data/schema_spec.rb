@@ -45,7 +45,7 @@ describe LegacyData::Schema do
     
     it 'should have all the information about the table' do  
       @schema.stub!(:class_name  ).and_return(class_name =mock)
-      @schema.stub!(:column_names).and_return(columns    =mock)
+      @schema.stub!(:columns     ).and_return(columns    =mock)
       @schema.stub!(:primary_key ).and_return(primary_key=mock)
       @schema.stub!(:relations   ).and_return(relations  =mock)
       @schema.stub!(:constraints ).and_return(constraints=mock)

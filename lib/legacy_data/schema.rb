@@ -66,7 +66,7 @@ module LegacyData
     def analyze_table
       log "analyzing #{table_name} => #{class_name}"
       TableDefinition.new(:table_name   => table_name,
-                          :columns      => column_names,
+                          :columns      => columns,
                           :primary_key  => primary_key,
                           :relations    => relations,
                           :constraints  => constraints

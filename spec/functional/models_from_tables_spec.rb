@@ -4,6 +4,7 @@ describe 'Models From Tables generator' do
   before :all do
     silence_warnings { RAILS_ROOT = File.expand_path(File.dirname(__FILE__) + '/../../output/functional') } 
     FileUtils.mkdir_p(RAILS_ROOT + '/app/models')
+    FileUtils.mkdir_p(RAILS_ROOT + '/spec')
     
     LegacyData::Schema.stub!(:log)    
   end
