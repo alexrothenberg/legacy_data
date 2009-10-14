@@ -4,14 +4,23 @@ class <%= class_name -%> < ActiveRecord::Base
   
   # Relationships
   <%- [:has_many, :has_one, :belongs_to, :has_and_belongs_to_many].each do |relation_type|
-        relations[relation_type].each do |table_name, options| 
-          class_for_table = LegacyData::TableClassNameMapper.class_name_for(table_name)
-          is_singular_association = [:has_one, :belongs_to].include?(relation_type)
-          association_name = class_for_table.underscore
-          association_name = association_name.pluralize unless is_singular_association
-          needs_class_name = (ActiveRecord::Base.class_name(association_name.pluralize) != class_for_table)
-        -%>  <%= relation_type %> <%= association_name.to_sym.inspect %>, <%=options.keys.map {|key| "#{key.to_sym.inspect} => #{options[key].to_sym.inspect}"}.join(', ')%><%= ", :class_name=>'#{class_for_table}'" if needs_class_name %>
-  <%-   end unless relations[relation_type].nil?
+        is_singular_association = [:has_one, :belongs_to].include?(relation_type)
+        unless relations[relation_type].nil?
+          association_names = relations[relation_type].keys.map do |assoc| 
+            association_name = LegacyData::TableClassNameMapper.class_name_for(assoc).underscore
+            association_name = association_name.pluralize unless is_singular_association
+            association_name
+          end
+          association_with_longest_name = association_names.max { |a,b| a.length <=> b.length }
+          relations[relation_type].each do |table_name, options| 
+            class_for_table = LegacyData::TableClassNameMapper.class_name_for(table_name)
+            association_name = class_for_table.underscore
+            association_name = association_name.pluralize unless is_singular_association
+            needs_class_name = (ActiveRecord::Base.class_name(association_name.pluralize) != class_for_table)
+            spaces = association_with_longest_name.size - association_name.size
+            -%>  <%= relation_type %> <%= association_name.to_sym.inspect %>,<%=' ' * spaces%> <%=options.keys.map {|key| "#{key.to_sym.inspect} => #{options[key].to_sym.inspect}"}.join(', ')%><%= ", :class_name=>'#{class_for_table}'" if needs_class_name %>
+  <%-     end
+        end
       end 
   -%>
 
@@ -25,7 +34,9 @@ class <%= class_name -%> < ActiveRecord::Base
       -%>  def self.possible_values_for_<%= col %>
     [ <%= possible_values %> ]
   end
-  validates_inclusion_of    <%= col.to_sym.inspect %>,       :in => possible_values_for_<%= col %>, :message => "is not one of (#{possible_values_for_<%= col %>.join(', ')})"
+  validates_inclusion_of <%= col.to_sym.inspect %>,
+                         :in      => possible_values_for_<%= col %>, 
+                         :message => "is not one of (#{possible_values_for_<%= col %>.join(', ')})"
   <%- end if constraints[:inclusion_of] -%>
   <%- [:allow_nil, :do_not_allow_nil].each do |nullable| 
         unless constraints[:numericality_of][nullable].blank? 
