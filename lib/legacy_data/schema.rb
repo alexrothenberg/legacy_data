@@ -182,7 +182,7 @@ module LegacyData
       custom_constraints, inclusion_constraints = {}, {}
       connection.constraints(table_name).each do |constraint|
         constraint_sql = constraint.second
-        if constraint_sql =~ /\"*(\w*)\"* IN \((.*)\)/i
+        if constraint_sql =~ /\s*\"*(\w*)\"*\s*IN\s*\((.*)\)/i
           inclusion_constraints[$1.downcase.to_sym] = $2
         else
           custom_constraints[constraint.first.underscore.to_sym] = constraint_sql

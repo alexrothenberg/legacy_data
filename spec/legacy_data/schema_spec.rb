@@ -169,18 +169,40 @@ describe LegacyData::Schema do
         @schema.custom_constraints.should == []
       end
   
-      it 'should get all "belongs_to" relationships when a foreign key is in my table' do
-        @connection.should_receive(:respond_to?).with(:constraints).and_return(true)
-        @connection.should_receive(:constraints).and_return([['SomeConstraint',    %{custom sql 1}   ], 
-                                                             ['in_constraint',     %{SOMEColumn IN ('Y', 'N')}],
-                                                             ['anotherconstraint', %{"aColumn" IN ('Yes', 'No')}],
-                                                             ['anotherconstraint', %{more custom sql}],
-                                                             ])
-        custom_constraints = @schema.custom_constraints
+      describe 'custom constraints' do
+        before :each do
+          @connection.should_receive(:respond_to?).with(:constraints).and_return(true)
+        end
+
+        it 'should get all custom constraints on a table (this may only apply to oracle?)' do
+          @connection.should_receive(:constraints).and_return([['SomeConstraint',    %{custom sql 1}   ], 
+                                                               ['in_constraint',     %{SOMEColumn IN ('Y', 'N')}],
+                                                               ['anotherconstraint', %{"aColumn" IN ('Yes', 'No')}],
+                                                               ['anotherconstraint', %{more custom sql}],
+                                                               ])
+          custom_constraints = @schema.custom_constraints
         
-        custom_constraints.first.should  == {:some_constraint => 'custom sql 1', :anotherconstraint => 'more custom sql'}
-        custom_constraints.second.should == {:acolumn         => "'Yes', 'No'",  :somecolumn        => "'Y', 'N'"}
+          custom_constraints.first.should  == {:some_constraint => 'custom sql 1', :anotherconstraint => 'more custom sql'}
+          custom_constraints.second.should == {:acolumn         => "'Yes', 'No'",  :somecolumn        => "'Y', 'N'"}
+        end
+      
+        it 'should parse inclusion constraints out of custom constraints' do
+          @connection.should_receive(:constraints).and_return([['in_constraint',              %{SOMEColumn IN ('Y', 'N')}              ],
+                                                               ['with_white_space',           %{    SOMEColumn2   IN     ('Y', 'N')   }],
+                                                               ['with_quotes',                %{"aColumn" IN ('Yes', 'No')}            ],
+                                                               ['with_quotes_and_whitespace', %{   "aColumn2"    IN    ('Yes', 'No')  }]
+                                                              ])
+          custom_constraints = @schema.custom_constraints
+        
+          custom_constraints.first.should  == {}
+          custom_constraints.second.should == {:somecolumn        => "'Y', 'N'"   ,
+                                               :somecolumn2       => "'Y', 'N'"   ,
+                                               :acolumn           => "'Yes', 'No'",  
+                                               :acolumn2          => "'Yes', 'No'"
+                                               }
+        end
       end
+
     end  
   end
   
