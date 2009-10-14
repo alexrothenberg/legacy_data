@@ -78,25 +78,26 @@ protected
 
     File.open("#{RAILS_ROOT}/spec/factories.rb", 'a+') do |file| 
       file.write "Factory.define :#{factory_name} do |#{factory_name.to_s.first}|\n"
+      column_with_longest_name = columns.max {|a,b| a.name.length <=> b.name.length }
       columns.each do |c|
         if c.null == false && c.name != analyzed_schema[:primary_key]
           value = case c.type
-          when :integer
-            "7"
-          when :string
-            "'hi'"
-          when :boolean
-            'false'
-          when :date
-            '{Time.now}'
-          when :datetime
-            '{Time.now}'
-          when :decimal
-            '12.3'
+          when :integer       then %[7]
+          when :float         then %[12.3]
+          when :decimal       then %[12.3]
+          when :datetime      then %[{Time.now}]
+          when :date          then %[{Time.now}]
+          when :timestamp     then %[{Time.now}]
+          when :time          then %[{Time.now}]
+          when :text          then %['some text value']
+          when :string        then %['some string']
+          when :binary        then %['some binary stuff']
+          when :boolean       then %[false]
           else
-            raise "the generator forgot to handle columns of type #{c.type}"
+            "'Sorry the models_to_tables_generator is not sure how to default columns of type #{c.type}'"
           end
-          file.write "  #{factory_name.to_s.first}.#{c.name} #{value}\n"
+          spaces = column_with_longest_name.name.size - c.name.size
+          file.write "  #{factory_name.to_s.first}.#{c.name}#{' ' * spaces} #{value}\n"
         end
       end
       file.write "end\n\n"

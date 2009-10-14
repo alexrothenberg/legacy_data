@@ -1,5 +1,5 @@
 Factory.define :post do |p|
-  p.title 'hi'
-  p.body 'hi'
+  p.title 'some string'
+  p.body  'some string'
 end
 
