@@ -46,10 +46,15 @@ def load_generator(generator_name="models_from_tables", args=[])
                                   {:generator=>generator_name, :command=>:create, :destination=>RAILS_ROOT})    
 end
 
-def invoke_generator(generator_name, args, the_command= :create)
+def command_for_generator(generator_name, args, the_command= :create)
   generator = load_generator(generator_name, args)
   LegacyData::TableClassNameMapper.stub!(:log)    
   cmd = generator.command(the_command)
   cmd.stub!(:logger).and_return(stub('stub').as_null_object)
+  cmd
+end
+
+def invoke_generator(generator_name, args, the_command= :create)
+  cmd = command_for_generator(generator_name, args, the_command)
   cmd.invoke!
 end

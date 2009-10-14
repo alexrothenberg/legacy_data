@@ -82,12 +82,14 @@ module LegacyData
     end
 
     def primary_key
-      if connection.respond_to?(:pk_and_sequence_for)
-        pk, seq = connection.pk_and_sequence_for(table_name)
-      elsif connection.respond_to?(:primary_key)
-        pk = connection.primary_key(table_name)
+      if @pk.nil?
+        if connection.respond_to?(:pk_and_sequence_for)
+          @pk, seq = connection.pk_and_sequence_for(table_name)
+        elsif connection.respond_to?(:primary_key)
+          @pk = connection.primary_key(table_name)
+        end
       end
-      pk
+      @pk
     end
 
     def relations
@@ -121,17 +123,15 @@ module LegacyData
         @constraints = {}
       
         @constraints[:unique],           @constraints[:multi_column_unique] = uniqueness_constraints
-        @constraints[:boolean_presence], @constraints[:presence_of]         = presence_constraints
+        boolean_presence_columns,        @constraints[:presence_of]         = presence_constraints
         @constraints[:numericality_of]                                      = numericality_constraints
-        @constraints[:custom]                                               = custom_constraints
+        @constraints[:custom],           @constraints[:inclusion_of]        = custom_constraints
+        
+        boolean_presence_columns.each {|col| @constraints[:inclusion_of][col] = "true, false" }
       end
       @constraints
       ##### TO DO
       # presence_of schoolparentid => school_parent     - FOREIGN KEY
-      # # booleans presence_of => inclusion_of
-      # integer numericality_of                         - INTEGER COLUMNS (except foreign keys)
-      # custom /(.*) IN \(.*\)/i => inclusion_of $1, :in=> %w($2)  -- TRY TO PARSE CUSTOM SQL RULES
-      # 
     end
     
     def numericality_constraints
@@ -159,7 +159,7 @@ module LegacyData
     end
     
     def integer_columns
-      columns.select {|column| column.type == :integer }
+      columns.select {|column| column.type == :integer }.reject {|column| column.name == primary_key}
     end
 
     def columns
@@ -179,11 +179,16 @@ module LegacyData
     
     def custom_constraints
       return [] unless connection.respond_to? :constraints
-      user_constraints = {}
+      custom_constraints, inclusion_constraints = {}, {}
       connection.constraints(table_name).each do |constraint|
-        user_constraints[constraint.first.underscore.to_sym] = constraint.second
+        constraint_sql = constraint.second
+        if constraint_sql =~ /\"*(\w*)\"* IN \((.*)\)/i
+          inclusion_constraints[$1.downcase.to_sym] = $2
+        else
+          custom_constraints[constraint.first.underscore.to_sym] = constraint_sql
+        end
       end
-      user_constraints
+      [custom_constraints, inclusion_constraints]
     end    
 
     def log msg

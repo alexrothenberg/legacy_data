@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{legacy_data}
-  s.version = "0.1.5"
+  s.version = "0.1.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alex Rothenberg"]
-  s.date = %q{2009-10-12}
+  s.date = %q{2009-10-13}
   s.description = %q{Create ActiveRecord models from an existing database}
   s.email = %q{alex@alexrothenberg.com}
   s.extra_rdoc_files = [
@@ -33,6 +33,7 @@ Gem::Specification.new do |s|
      "lib/legacy_data/schema.rb",
      "lib/legacy_data/table_class_name_mapper.rb",
      "lib/legacy_data/table_definition.rb",
+     "spec/expected/factories.rb",
      "spec/expected/post.rb",
      "spec/functional/expected/comment.rb",
      "spec/functional/expected/post.rb",
@@ -51,7 +52,8 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.2}
   s.summary = %q{Create ActiveRecord models from an existing database}
   s.test_files = [
-    "spec/expected/post.rb",
+    "spec/expected/factories.rb",
+     "spec/expected/post.rb",
      "spec/functional/expected/comment.rb",
      "spec/functional/expected/post.rb",
      "spec/functional/functional_spec_helper.rb",

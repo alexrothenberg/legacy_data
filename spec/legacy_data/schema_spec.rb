@@ -112,17 +112,21 @@ describe LegacyData::Schema do
 
     describe 'constraints' do
       it 'should have the different types of constraints' do
-        @schema.stub!(:uniqueness_constraints  ).and_return([unique          =[mock], multi_column_unique=[mock]])
-        @schema.stub!(:presence_constraints    ).and_return([boolean_presence=[mock], presence_of        =[mock]])
-        @schema.stub!(:numericality_constraints).and_return(numericality={}                                      )
-        @schema.stub!(:custom_constraints      ).and_return(custom          =[mock])
+        @schema.stub!(:uniqueness_constraints  ).and_return([unique           =[mock], multi_column_unique=[mock]])
+        @schema.stub!(:presence_constraints    ).and_return([[boolean_presence=mock], presence_of        =[mock]])
+        @schema.stub!(:numericality_constraints).and_return(numericality      ={}                                 )
+        @schema.stub!(:custom_constraints      ).and_return([custom           =[mock], custom_inclusion   ={}    ])
 
-        @schema.constraints.should == {:unique             =>unique,
-                                       :multi_column_unique=>multi_column_unique,
-                                       :boolean_presence   =>boolean_presence,
-                                       :presence_of        =>presence_of,
-                                       :numericality_of    =>numericality,
-                                       :custom             =>custom }
+        constraints = @schema.constraints
+        
+        constraints[:unique             ].should == unique
+        constraints[:multi_column_unique].should == multi_column_unique
+        constraints[:presence_of        ].should == presence_of
+        constraints[:numericality_of    ].should == numericality
+        constraints[:custom             ].should == custom
+        constraints[:inclusion_of       ].should == custom_inclusion.merge(boolean_presence=> "true, false")
+
+
       end
 
       it 'should have the uniqueness constraints (booleans are done differently)' do
@@ -167,8 +171,15 @@ describe LegacyData::Schema do
   
       it 'should get all "belongs_to" relationships when a foreign key is in my table' do
         @connection.should_receive(:respond_to?).with(:constraints).and_return(true)
-        @connection.should_receive(:constraints).and_return([['SomeConstraint', 'custom sql 1'], ['anotherconstraint', 'more custom sql']])
-        @schema.custom_constraints.should == {:some_constraint => 'custom sql 1', :anotherconstraint => 'more custom sql'}
+        @connection.should_receive(:constraints).and_return([['SomeConstraint',    %{custom sql 1}   ], 
+                                                             ['in_constraint',     %{SOMEColumn IN ('Y', 'N')}],
+                                                             ['anotherconstraint', %{"aColumn" IN ('Yes', 'No')}],
+                                                             ['anotherconstraint', %{more custom sql}],
+                                                             ])
+        custom_constraints = @schema.custom_constraints
+        
+        custom_constraints.first.should  == {:some_constraint => 'custom sql 1', :anotherconstraint => 'more custom sql'}
+        custom_constraints.second.should == {:acolumn         => "'Yes', 'No'",  :somecolumn        => "'Y', 'N'"}
       end
     end  
   end

@@ -7,6 +7,5 @@ class Post < ActiveRecord::Base
   # Constraints
   
   
-  validates_numericality_of :id
 end
 

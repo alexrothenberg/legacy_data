@@ -24,7 +24,7 @@ describe 'Models From Tables generator' do
                                                                },
                                               :constraints  => { :unique             =>['title'],
                                                                  :multi_column_unique=>[],
-                                                                 :boolean_presence   =>[],
+                                                                 :inclusion_of       =>[],
                                                                  :presence_of        =>['body'],
                                                                  :numericality_of    =>[],
                                                                  :custom             =>[]
@@ -37,7 +37,8 @@ describe 'Models From Tables generator' do
     LegacyData::TableClassNameMapper.stub!(:class_name_for).with('posts'   ).and_return('Post')
     LegacyData::TableClassNameMapper.stub!(:class_name_for).with('comments').and_return('Comment')
 
-    invoke_generator('models_from_tables', ["--table-name", "posts"], :create)
+    cmd = command_for_generator('models_from_tables', ["--table-name", "posts"], :create)
+    cmd.invoke!
   end
   
   it 'should generate a posts model' do

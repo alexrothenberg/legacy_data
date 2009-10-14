@@ -21,11 +21,14 @@ class <%= class_name -%> < ActiveRecord::Base
   -%>  #validates_uniqueness_of_multiple_column_constraint :<%= cols.inspect %>
   <%- end -%>
   <%= "validates_presence_of #{constraints[:presence_of].map {|cols| cols.downcase.to_sym.inspect}.join(', ')}" unless constraints[:presence_of].blank? %>
-  <%- constraints[:boolean_presence].each do |col| 
-      -%>  validates_inclusion_of    <%= col.to_sym.inspect %>,       :in => %w(true false)
-  <%- end -%>
+  <%- constraints[:inclusion_of].each do |col, possible_values| 
+      -%>  def self.possible_values_for_<%= col %>
+    [ <%= possible_values %> ]
+  end
+  validates_inclusion_of    <%= col.to_sym.inspect %>,       :in => possible_values_for_<%= col %>, :message => "is not one of (#{possible_values_for_<%= col %>.join(', ')})"
+  <%- end if constraints[:inclusion_of] -%>
   <%- [:allow_nil, :do_not_allow_nil].each do |nullable| 
-        unless constraints[:numericality_of][nullable].blank?
+        unless constraints[:numericality_of][nullable].blank? 
     -%>  <%= "validates_numericality_of #{constraints[:numericality_of][nullable].map {|cols| cols.downcase.to_sym.inspect}.join(', ')}" %><%= ", {:allow_nil=>true}" if nullable == :allow_nil %>
   <%-   end
       end unless constraints[:numericality_of].blank? -%>
@@ -37,6 +40,6 @@ class <%= class_name -%> < ActiveRecord::Base
     <%= sql_rule %>
     SQL
   end
-  <%- end -%>
+  <%- end if constraints[:custom] -%>
 end
 
