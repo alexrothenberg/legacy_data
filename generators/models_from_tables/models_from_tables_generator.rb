@@ -1,8 +1,4 @@
 require File.dirname(__FILE__) + '/../../lib/legacy_data'
-# require File.dirname(__FILE__) + '/../../lib/legacy_data/table_definition'
-# require File.dirname(__FILE__) + '/../../lib/legacy_data/schema'
-# require File.dirname(__FILE__) + '/../../lib/legacy_data/table_class_name_mapper'
-# require File.dirname(__FILE__) + '/../../lib/active_record/connection_adapters/oracle_enhanced_adapter'
 
 class ModelsFromTablesGenerator < Rails::Generator::Base  
   def manifest
@@ -23,37 +19,8 @@ class ModelsFromTablesGenerator < Rails::Generator::Base
                              File.join('app/models', "#{analyzed_table[:class_name].underscore}.rb"), 
                              :assigns => analyzed_table.to_hash
 
-        add_factory_girl_factory analyzed_table.to_hash
-                             
-        # #                      puts m.source_root
-        # # factory_template = m.source_path('factory.rb')
-        # 
-        # factory_template = File.dirname(__FILE__) + '/templates/factory.rb'
-        # puts "factory_template #{factory_template}"
-        # new_factory =          m.send(:render_file, factory_template) do |file|
-        # #             vars = analyzed_table.to_hash
-        # #             b = binding
-        # #             vars.each { |k,v| eval "#{k} = vars[:#{k}] || vars['#{k}']", b }
-        # # puts 'in block'
-        #           "in block"
-        #            # Render the source file with the temporary binding.
-        #            # ERB.new(file.read, nil, '-').result(b)
-        #          end
-        # puts 'after new_factory'
-        # puts "    its... #{new_factory}"
-# 
-#         m.gsub_file 'spec/factories.rb', /\Z/ do |match|
-# # #           # puts match
-# # #           puts 'BEFORE'
-# # #           # puts m.source_path('factory.rb')
-# # #           # puts analyzed_table.to_hash.inspect
-# # #           puts 'BEFORE'
-# puts 'before'
-# puts new_factory
-#           puts "DONE"
-#           "#{match}\n  #{new_factory}\n"
-#           # "#{match}\n ok \n"
-#         end
+        add_factory_girl_factory analyzed_table.to_hash if options[:with_factories]
+
       end
     end
   rescue => e
@@ -69,6 +36,8 @@ protected
           'Naming convention for tables in the database - will not be used when generating naming the models') { |value| options[:table_naming_convention] = value }
     opt.on('--skip-associated', 
           'Do not follow foreign keys to model associated tables') { |value| options[:skip_associated] = true }
+    opt.on('--with-factories', 
+          'Add factory-girl factories for all created models') { |value| options[:with_factories] = true }
   end
   
 

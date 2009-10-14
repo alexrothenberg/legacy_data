@@ -11,7 +11,7 @@ describe 'Models From Tables generator' do
   end
   
   before :each do
-    FileUtils.rm(RAILS_ROOT + '/spec/factories.rb')
+    FileUtils.rm(RAILS_ROOT + '/spec/factories.rb', :force => true)
     
     @posts = LegacyData::TableDefinition.new( :class_name   => 'Posts',
                                               :table_name   => 'posts',
@@ -20,7 +20,7 @@ describe 'Models From Tables generator' do
                                               :primary_key  => 'id',
                                               :relations    => { :has_many               =>{'comments'=>{:foreign_key=>'comment_id'}}, 
                                                                  :belongs_to             =>{}, 
-                                                                 :has_and_belongs_to_many=>[]
+                                                                 :has_and_belongs_to_many=>{}
                                                                },
                                               :constraints  => { :unique             =>['title'],
                                                                  :multi_column_unique=>[],
@@ -36,16 +36,24 @@ describe 'Models From Tables generator' do
     LegacyData::TableClassNameMapper.should_receive(:let_user_validate_dictionary)
     LegacyData::TableClassNameMapper.stub!(:class_name_for).with('posts'   ).and_return('Post')
     LegacyData::TableClassNameMapper.stub!(:class_name_for).with('comments').and_return('Comment')
-
-    cmd = command_for_generator('models_from_tables', ["--table-name", "posts"], :create)
-    cmd.invoke!
   end
   
   it 'should generate a posts model' do
+    invoke_generator('models_from_tables', ["--table-name", "posts"], :create)
+
     File.read(RAILS_ROOT + '/app/models/post.rb').should == File.read(File.expand_path(File.dirname(__FILE__) + '/expected/post.rb'))
   end
   
-  it 'should generate a :posts factory' do
+  it 'should not generate factories by default' do
+    generator = load_generator('models_from_tables', ["--table-name", "posts"])
+    generator.should_not_receive(:add_factory_girl_factory)
+
+    generator.command(:create).invoke!
+  end
+
+  it 'should generate factories when asked' do
+    generator = load_generator('models_from_tables', ["--table-name", "posts", "--with-factories"])
+    generator.command(:create).invoke!
     
     File.read(RAILS_ROOT + '/spec/factories.rb').should == File.read(File.expand_path(File.dirname(__FILE__) + '/expected/factories.rb'))
   end
