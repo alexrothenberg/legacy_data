@@ -48,12 +48,16 @@ describe 'Models From Tables generator' do
     generator = load_generator('models_from_tables', ["--table-name", "posts"])
     generator.should_not_receive(:add_factory_girl_factory)
 
-    generator.command(:create).invoke!
+    cmd = generator.command(:create)
+    cmd.stub!(:logger).and_return(stub('stub').as_null_object)
+    cmd.invoke!
   end
 
   it 'should generate factories when asked' do
     generator = load_generator('models_from_tables', ["--table-name", "posts", "--with-factories"])
-    generator.command(:create).invoke!
+    cmd = generator.command(:create)
+    cmd.stub!(:logger).and_return(stub('stub').as_null_object)
+    cmd.invoke!
     
     File.read(RAILS_ROOT + '/spec/factories.rb').should == File.read(File.expand_path(File.dirname(__FILE__) + '/expected/factories.rb'))
   end
