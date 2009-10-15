@@ -36,6 +36,7 @@ Gem::Specification.new do |s|
      "spec/expected/factories.rb",
      "spec/expected/post.rb",
      "spec/functional/expected/comment.rb",
+     "spec/functional/expected/factories.rb",
      "spec/functional/expected/post.rb",
      "spec/functional/functional_spec_helper.rb",
      "spec/functional/models_from_tables_spec.rb",
@@ -55,6 +56,7 @@ Gem::Specification.new do |s|
     "spec/expected/factories.rb",
      "spec/expected/post.rb",
      "spec/functional/expected/comment.rb",
+     "spec/functional/expected/factories.rb",
      "spec/functional/expected/post.rb",
      "spec/functional/functional_spec_helper.rb",
      "spec/functional/models_from_tables_spec.rb",
@@ -72,12 +74,15 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_development_dependency(%q<rspec>, [">= 0"])
       s.add_runtime_dependency(%q<activerecord>, [">= 0"])
+      s.add_runtime_dependency(%q<matthuhiggins-foreigner>, [">= 0.2.1"])
     else
       s.add_dependency(%q<rspec>, [">= 0"])
       s.add_dependency(%q<activerecord>, [">= 0"])
+      s.add_dependency(%q<matthuhiggins-foreigner>, [">= 0.2.1"])
     end
   else
     s.add_dependency(%q<rspec>, [">= 0"])
     s.add_dependency(%q<activerecord>, [">= 0"])
+    s.add_dependency(%q<matthuhiggins-foreigner>, [">= 0.2.1"])
   end
 end

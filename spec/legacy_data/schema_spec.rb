@@ -98,13 +98,17 @@ describe LegacyData::Schema do
       end
   
       it 'should give no "belongs_to" when the adapter does not support foreign keys' do
-        @connection.should_receive(:respond_to?).with(:foreign_keys_for).and_return(false)
+        @connection.should_receive(:respond_to?).with(:foreign_keys).and_return(false)
         @schema.belongs_to_relations.should == {}
       end
   
       it 'should get all "belongs_to" relationships when a foreign key is in my table' do
-        @connection.should_receive(:respond_to?).with(:foreign_keys_for).and_return(true)
-        @connection.should_receive(:foreign_keys_for).and_return([['OTHER_TABLE', 'FK_1'], ['THE_TABLE', 'the_table_id']])
+        @connection.should_receive(:respond_to?).with(:foreign_keys).and_return(true)
+        @connection.should_receive(:foreign_keys).and_return([
+          Foreigner::ConnectionAdapters::ForeignKeyDefinition.new('some_table', 'OTHER_TABLE', {:column=>'fk_1'}),
+          Foreigner::ConnectionAdapters::ForeignKeyDefinition.new('some_table', 'THE_TABLE',   {:column=>'the_table_id'})
+          ])
+
         @schema.belongs_to_relations.should == {'other_table' => {:foreign_key=>:fk_1        }, 
                                                 'the_table'   => {:foreign_key=>:the_table_id} }
       end

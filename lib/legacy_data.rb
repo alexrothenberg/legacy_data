@@ -1,7 +1,8 @@
+require 'foreigner' #matthuhiggens-foreigner
+
 require 'legacy_data/table_definition'
 require 'legacy_data/schema'
 require 'legacy_data/table_class_name_mapper'
-
 
 module ActiveRecord  
   Base.class_eval do

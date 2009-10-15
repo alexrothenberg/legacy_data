@@ -100,11 +100,12 @@ module LegacyData
     end
     
     def belongs_to_relations
-      return {} unless connection.respond_to? :foreign_keys_for
-      
+      return {} unless connection.respond_to? :foreign_keys
       belongs_to = {}
-      connection.foreign_keys_for(table_name).each do |relation|
-        belongs_to[relation.first.downcase] = {:foreign_key=>relation.second.downcase.to_sym}
+      connection.foreign_keys(table_name).each do |foreign_key|
+        options = {:foreign_key=>foreign_key.options[:column].downcase.to_sym}
+        options[:dependent] = :destroy if foreign_key.options[:dependent] == :delete
+        belongs_to[foreign_key.to_table.downcase] = options
       end
       belongs_to
     end

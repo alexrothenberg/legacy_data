@@ -1,11 +1,11 @@
 module OracleEnhancedAdapterConstraintsMethods
 
-  def foreign_keys_for(table_name)
+  def foreign_keys(table_name)
     (owner, table_name) = @connection.describe(table_name)
 
     # RSI: changed select from all_constraints to user_constraints - much faster in large data dictionaries
     fks = select_rows(<<-SQL, 'Foreign Keys')
-      select parent_c.table_name, cc.column_name
+      select parent_c.table_name 'to_table', cc.column_name 'column', c.r_constraint_name 'name', c.delete_rule 
         from user_constraints c, user_constraints parent_c, user_cons_columns cc
       where c.owner = '#{owner}'
         and c.table_name = '#{table_name}'
@@ -14,7 +14,18 @@ module OracleEnhancedAdapterConstraintsMethods
         and cc.owner = c.owner
         and cc.constraint_name = c.constraint_name
     SQL
+    
+    fks.map do |row|
+      options = {:column => row['column'], :name => row['name']}
+      if row['delete_rule'] == 'CASCADE'
+        options[:dependent] = :delete
+      elsif $1 == 'SET NULL'
+        options[:dependent] = :nullify
+      end
+      ForeignKeyDefinition.new(table_name, row['to_table'], options)
+    end
   end
+
   def foreign_keys_of(table_name)
     (owner, table_name) = @connection.describe(table_name)
 
