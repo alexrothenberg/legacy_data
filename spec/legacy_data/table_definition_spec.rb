@@ -22,7 +22,7 @@ describe LegacyData::TableDefinition do
   
   describe 'join table' do
     before :each do
-      @foreign_key_columns = ['one_table_id',               'another_table_id']
+      @foreign_key_columns = [mock(:name=>'one_table_id'),  mock(:name=>'another_table_id') ]
       @belongs_to_relation = {'one_table'     => {:foreign_key=>:one_table_id    }, 
                               'another_table' => {:foreign_key=>:another_table_id} }
     end

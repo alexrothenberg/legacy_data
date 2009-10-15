@@ -101,6 +101,7 @@ module LegacyData
     
     def belongs_to_relations
       return {} unless connection.respond_to? :foreign_keys
+
       belongs_to = {}
       connection.foreign_keys(table_name).each do |foreign_key|
         options = {:foreign_key=>foreign_key.options[:column].downcase.to_sym}

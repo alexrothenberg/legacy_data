@@ -17,7 +17,10 @@ module LegacyData
     end
     
     def join_table?
-      (columns.size == 2) and relations[:belongs_to] and (relations[:belongs_to].values.map {|value| value[:foreign_key]}.map(&:to_s) == columns)
+      return false unless (columns.size == 2) and relations[:belongs_to] and (relations[:belongs_to].values.size == 2)
+      column_names      = columns.map(&:name)
+      foreign_key_names = relations[:belongs_to].values.map {|value| value[:foreign_key]}.map(&:to_s) 
+      return column_names.sort == foreign_key_names.sort
     end
     
     def belongs_to_relations
