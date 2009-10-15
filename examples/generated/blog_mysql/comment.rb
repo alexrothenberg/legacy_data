@@ -3,7 +3,7 @@ class Comment < ActiveRecord::Base
   set_primary_key :id
   
   # Relationships
-  belongs_to :post, :foreign_key => :post_id, :dependent => :destroy
+  belongs_to :post, :dependent => :destroy, :foreign_key => :post_id
 
   # Constraints
   

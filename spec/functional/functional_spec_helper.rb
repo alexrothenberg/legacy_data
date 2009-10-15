@@ -30,7 +30,16 @@ def create_blog_tables connection_info
     t.foreign_key :posts,    :dependent => :delete
     t.text        :body
   end
-  
-  puts "createing blog tables for #{connection}"
+end
+
+
+def connection_info_for adapter
+  connections =
+    {'mysql'   => {:adapter=>'mysql',           :database=> "blog_test", :username=>'root', :password=>''},
+     'sqlite3' => {:adapter=>'sqlite3',         :database=> ":memory:"                                   },
+     'oracle'  => {:adapter=>'oracle_enhanced', :database=> "",          :username=>'root', :password=>''}
+    }
+
+  connections[adapter]
 end
 

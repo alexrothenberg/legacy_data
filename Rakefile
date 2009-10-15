@@ -27,37 +27,39 @@ Spec::Rake::SpecTask.new(:spec) do |spec|
   spec.spec_files = FileList['spec/**/*_spec.rb']
 end
 
-def run_without_aborting(*tasks)
+def run_functional_without_aborting(*adapters)
   errors = []
 
-  tasks.each do |task|
+  adapters.each do |adapter|
     begin
-      puts "Running #{task} specs"
-      Rake::Task[task].invoke
+      puts "Running #{adapter} specs"
+      ENV['ADAPTER'] = adapter
+      Rake::Task["#{adapter}:spec"].invoke
       puts ''
     rescue Exception
-      errors << task
+      errors << "#{adapter}:spec"
     end
   end
 
   abort "Errors running #{errors.join(', ')}" if errors.any?
 end
 
-for adapter in %w( mysql postgresql sqlite sqlite3 firebird db2 oracle sybase openbase frontbase jdbcmysql jdbcpostgresql jdbcsqlite3 jdbcderby jdbch2 jdbchsqldb )
-  Spec::Rake::SpecTask.new("spec_#{adapter}") do |spec|
-    spec.libs << 'lib' << 'spec'
-    spec.spec_files = FileList["spec/**/*_#{adapter}spec.rb"]
-  end
+def adapters
+  %w( mysql sqlite3 )
+end
 
+for adapter in adapters
   namespace adapter do
-    task :spec => "spec_#{adapter}" 
+    Spec::Rake::SpecTask.new(:spec) do |spec|
+      spec.libs << 'lib' << 'spec'
+      spec.spec_files = FileList["spec/**/*_adapterspec.rb"]
+    end
   end
 end
 
-desc 'Run unit, mysql, sqlite, and oracle tests'
-task :spec_all do
-  tasks = %w(spec spec_mysql spec_sqlite3 spec_oracle)
-  run_without_aborting(*tasks)
+desc 'Run unit + adapter specific specs (mysql, sqlite, and oracle)'
+task :spec_all => :spec do
+  run_functional_without_aborting(*adapters)
 end
 
 Spec::Rake::SpecTask.new(:rcov) do |spec|
