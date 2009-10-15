@@ -18,7 +18,11 @@ class <%= class_name -%> < ActiveRecord::Base
             association_name = association_name.pluralize unless is_singular_association
             needs_class_name = (ActiveRecord::Base.class_name(association_name.pluralize) != class_for_table)
             spaces = association_with_longest_name.size - association_name.size
-            -%>  <%= relation_type %> <%= association_name.to_sym.inspect %>,<%=' ' * spaces%> <%=options.keys.map {|key| "#{key.to_sym.inspect} => #{options[key].to_sym.inspect}"}.join(', ')%><%= ", :class_name=>'#{class_for_table}'" if needs_class_name %>
+            option_keys = options.keys.map(&:to_s).sort
+            options[:class_name] = class_for_table if needs_class_name
+            options_to_display = options.inspect
+            options_to_display = options.inspect
+            -%>  <%= relation_type %> <%= association_name.to_sym.inspect %>,<%=' ' * spaces%> <%=option_keys.map {|key| "#{key.to_sym.inspect} => #{options[key.to_sym].to_sym.inspect}"}.join(', ')%><%= ", :class_name=>'#{class_for_table}'" if needs_class_name %>
   <%-     end
         end
       end 

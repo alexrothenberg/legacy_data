@@ -1,11 +1,41 @@
 require File.expand_path(File.dirname(__FILE__) + '/functional_spec_helper')
 
-describe 'Models From Tables generator' do
+def create_blog_tables 
+  connection = ActiveRecord::Base.connection
+  
+  [:post_tags, :comments, :posts, :tags].each do |table|
+    connection.drop_table table  if connection.table_exists? table
+  end
+
+  connection.create_table :posts do |t|
+    t.string :title
+    t.text   :body
+  end
+  connection.create_table :comments do |t|
+    t.integer     :post_id
+    t.foreign_key :posts,    :dependent => :delete
+    t.text        :body
+  end
+  connection.create_table :tags do |t|
+    t.string     :name
+  end
+  connection.create_table :post_tags, :id=>false do |t|
+    t.integer     :post_id
+    t.foreign_key :posts
+    t.integer     :tag_id
+    t.foreign_key :tags
+  end
+end
+
+
+describe 'Generating models from a blog database' do
   before :all do
     adapter = ENV['ADAPTER']
     abort('No adapter specified') if adapter.nil?
-
-    create_blog_tables(connection_info_for(adapter) )
+    connection_info = connection_info_for(:blog, adapter) 
+    pending("The #{:blog} spec does not run for #{adapter}") if connection_info.nil?
+    initialize_connection connection_info
+    create_blog_tables
         
     silence_warnings { RAILS_ROOT = File.expand_path("#{File.dirname(__FILE__)}/../../output/functional/blog_#{adapter}") } 
     FileUtils.mkdir_p(RAILS_ROOT + '/app/models')
@@ -19,26 +49,19 @@ describe 'Models From Tables generator' do
     Object.send(:remove_const, :RAILS_ROOT)
   end
   
-  it 'should generate a posts model' do
-    
-    invoke_generator('models_from_tables', [], :create)
-    
-    File.read(RAILS_ROOT + '/app/models/post.rb'   ).should == File.read("#{@expected_directory}/post.rb"     )
+  before :each do #
+    FileUtils.rm(RAILS_ROOT + '/spec/factories.rb', :force => true)
+    invoke_generator('models_from_tables', ["--with-factories"], :create)
   end
 
-  # describe 'all models related to posts in database' do
-    it "should  generated the expected factories" do
-      FileUtils.rm(RAILS_ROOT + '/spec/factories.rb', :force => true)
-      invoke_generator('models_from_tables', ["--with-factories"], :create)
-    
-    %w( post comment tag ).each do |model|
-    #   it "should generate the expected #{model} model" do
-        File.read(RAILS_ROOT + "/app/models/#{model}.rb").should == File.read("#{@expected_directory}/#{model}.rb")
-    #   end
+  %w( post comment tag ).each do |model|
+    it "should generate the expected #{model} model" do
+      File.read(RAILS_ROOT + "/app/models/#{model}.rb").should == File.read("#{@expected_directory}/#{model}.rb")
     end
-    #   
-      File.read(RAILS_ROOT + '/spec/factories.rb').should == File.read("#{@expected_directory}/factories.rb")
-    end
-  # end
+  end
+
+  it "should  generated the expected factories" do
+    File.read(RAILS_ROOT + '/spec/factories.rb').should == File.read("#{@expected_directory}/factories.rb")
+  end
   
 end

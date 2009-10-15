@@ -202,7 +202,7 @@ module LegacyData
     
     private
     def self.connection 
-      @conn ||= ActiveRecord::Base.connection
+      ActiveRecord::Base.connection
     end
     def connection
       self.class.connection
