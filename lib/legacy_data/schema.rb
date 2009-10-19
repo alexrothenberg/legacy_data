@@ -28,7 +28,7 @@ module LegacyData
       if table_name
         add_pending_table(table_name)
       else
-        LegacyData::Schema.tables.each {|table| add_pending_table(table) }
+        LegacyData::Schema.tables.sort.each {|table| add_pending_table(table) }
       end
     end
     def self.add_pending_table table_name

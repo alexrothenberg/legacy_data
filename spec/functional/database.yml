@@ -1,0 +1,45 @@
+# CREATE DATABASE legacy_data_blog;
+mysql_blog:
+  adapter:  mysql
+  database: legacy_data_blog
+  username: root
+  password: 
+
+sqlite3_blog:
+  adapter:  sqlite3
+  database: ':memory:'
+
+# CREATE USER legacy_data_blog IDENTIFIED BY legacy_data_blog;
+# GRANT ALL PRIVILEGES TO legacy_data_blog;
+oracle_blog:
+  adapter:  oracle_enhanced
+  database: localhost:1521/XE
+  username: legacy_data_blog
+  password: legacy_data_blog
+
+# CREATE DATABASE drupal_6_14;
+mysql_drupal:
+  adapter:  mysql
+  database: drupal_6_14
+  username: root
+  password: 
+
+# CREATE DATABASE j2ee_petstore;
+mysql_j2ee_petstore:
+  adapter:  mysql
+  database: j2ee_petstore
+  username: root
+  password: 
+
+sqlite3_j2ee_petstore:
+  adapter:  sqlite3
+  database: ':memory:'
+
+# CREATE USER petstore IDENTIFIED BY petstore;
+# GRANT ALL PRIVILEGES TO petstore;
+oracle_j2ee_petstore:
+  adapter:  oracle_enhanced
+  database: localhost:1521/XE
+  username: petstore
+  password: petstore
+

@@ -56,7 +56,7 @@ Done analyzing the tables.
     def compute_class_name table_name
       table_name =~ /#{naming_convention}/i
       stripped_table_name = $1 || table_name
-      dictionary[table_name] = ActiveRecord::Base.class_name(stripped_table_name.downcase.pluralize)
+      dictionary[table_name] = ActiveRecord::Base.class_name(stripped_table_name.underscore.downcase.pluralize)
     end
     
     def self.log msg

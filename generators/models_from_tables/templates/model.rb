@@ -1,5 +1,5 @@
 class <%= class_name -%> < ActiveRecord::Base
-  set_table_name <%= table_name.to_sym.inspect %>
+  set_table_name <%= table_name.downcase.to_sym.inspect %>
   <%= "set_primary_key #{primary_key.to_sym.inspect}" if primary_key %>
   
   # Relationships
@@ -12,7 +12,8 @@ class <%= class_name -%> < ActiveRecord::Base
             association_name
           end
           association_with_longest_name = association_names.max { |a,b| a.length <=> b.length }
-          relations[relation_type].each do |table_name, options| 
+          relations[relation_type].keys.sort.each do |table_name|
+            options =  relations[relation_type][table_name]
             class_for_table = LegacyData::TableClassNameMapper.class_name_for(table_name)
             association_name = class_for_table.underscore
             association_name = association_name.pluralize unless is_singular_association

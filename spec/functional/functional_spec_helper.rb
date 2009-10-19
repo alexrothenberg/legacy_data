@@ -12,15 +12,13 @@ end
   
 
 def connection_info_for example, adapter
-  connections = {
-    :blog   => {'mysql'   => {:adapter=>'mysql',           :database=> "legacy_data_blog", :username=>'root', :password=>''},
-                'sqlite3' => {:adapter=>'sqlite3',         :database=> ":memory:"                                          },
-                'oracle'  => {:adapter=>'oracle_enhanced', :database=> "",                 :username=>'root', :password=>''}
-                },
-    :drupal => {'mysql'   => {:adapter=>'mysql',           :database=> "drupal_6_14",      :username=>'root', :password=>''}
-               }
-    }
-
-  connections[example][adapter]
+  config = YAML::load(IO.read(File.dirname(__FILE__) + '/database.yml'))
+  config["#{adapter}_#{example}"]
 end
 
+def execute_sql_script script_filename
+  sql_script = File.read script_filename
+  sql_script.split(';').each do |sql_statement|
+    ActiveRecord::Base.connection.execute(sql_statement) unless sql_statement.blank?
+  end
+end

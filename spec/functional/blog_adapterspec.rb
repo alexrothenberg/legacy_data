@@ -50,6 +50,7 @@ describe 'Generating models from a blog database' do
   end
   
   before :each do #
+    pending("oracle does not yet work with t.foreign_key table creation") if ENV['ADAPTER'] == 'oracle'
     FileUtils.rm(RAILS_ROOT + '/spec/factories.rb', :force => true)
     invoke_generator('models_from_tables', ["--with-factories"], :create)
   end
@@ -65,3 +66,4 @@ describe 'Generating models from a blog database' do
   end
   
 end
+

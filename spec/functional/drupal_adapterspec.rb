@@ -15,7 +15,7 @@ if ENV['ADAPTER'] == 'mysql'
       example = :drupal
       
       connection_info = connection_info_for(example, adapter) 
-      pending("The #{:drupal} spec does not run for #{adapter}") if connection_info.nil?
+      pending("The #{example} spec does not run for #{adapter}") if connection_info.nil?
       initialize_connection connection_info
       create_drupal_schema
         

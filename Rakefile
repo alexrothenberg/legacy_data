@@ -45,7 +45,7 @@ def run_functional_without_aborting(*adapters)
 end
 
 def adapters
-  %w( mysql sqlite3 )
+  %w( mysql sqlite3 oracle)
 end
 
 for adapter in adapters
