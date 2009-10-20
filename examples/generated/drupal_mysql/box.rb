@@ -1,8 +1,9 @@
 class Box < ActiveRecord::Base
-  set_table_name :boxes
+  
   set_primary_key :bid
   
   # Relationships
+  
 
   # Constraints
   validates_uniqueness_of :info

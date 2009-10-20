@@ -16,7 +16,8 @@ describe LegacyData::TableDefinition do
       params = {}
       [:class_name, :table_name, :columns, :primary_key, :relations, :constraints].each { |field| params[field] = "#{field}_value" } 
       table_definition = LegacyData::TableDefinition.new(params)
-      table_definition.to_hash.should == params
+
+      table_definition.to_hash.should == params.merge(:model => table_definition)
     end
   end
   

@@ -1,8 +1,9 @@
 class Item < ActiveRecord::Base
-  set_table_name :item
+  set_table_name  :item
   set_primary_key :itemid
   
   # Relationships
+  
 
   # Constraints
   validates_uniqueness_of :itemid

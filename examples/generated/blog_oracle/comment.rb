@@ -1,5 +1,5 @@
 class Comment < ActiveRecord::Base
-  set_table_name :comments
+  set_table_name  :comments
   set_primary_key :id
   
   # Relationships

@@ -1,8 +1,9 @@
 class User < ActiveRecord::Base
-  set_table_name :users
+  
   set_primary_key :uid
   
   # Relationships
+  
 
   # Constraints
   validates_uniqueness_of :name

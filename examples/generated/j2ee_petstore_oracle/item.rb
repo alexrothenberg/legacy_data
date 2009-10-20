@@ -1,5 +1,5 @@
 class Item < ActiveRecord::Base
-  set_table_name :item
+  set_table_name  :item
   set_primary_key :itemid
   
   # Relationships
@@ -9,7 +9,6 @@ class Item < ActiveRecord::Base
   has_and_belongs_to_many :tags, :association_foreign_key => :tagid, :foreign_key => :itemid, :join_table => :tag_item
 
   # Constraints
-  
   validates_presence_of :productid, :name, :description, :price, :address_addressid, :contactinfo_contactinfoid, :totalscore, :numberofvotes, :disabled
   validates_numericality_of :totalscore, :numberofvotes, :disabled
 end

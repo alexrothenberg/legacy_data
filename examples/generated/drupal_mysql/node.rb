@@ -1,8 +1,9 @@
 class Node < ActiveRecord::Base
-  set_table_name :node
+  set_table_name  :node
   set_primary_key :nid
   
   # Relationships
+  
 
   # Constraints
   validates_uniqueness_of :vid

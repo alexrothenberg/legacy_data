@@ -1,8 +1,9 @@
 class Tag < ActiveRecord::Base
-  set_table_name :tag
+  set_table_name  :tag
   set_primary_key :tagid
   
   # Relationships
+  
 
   # Constraints
   validates_uniqueness_of :tag
