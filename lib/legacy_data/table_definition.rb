@@ -94,7 +94,7 @@ module LegacyData
       constraints[:inclusion_of].keys.map do |col|
         <<-OUTPUT
   def self.possible_values_for_#{col}
-    [ #{constraints[:inclusion_of][col]} ]
+    #{constraints[:inclusion_of][col].inspect}
   end
   validates_inclusion_of #{col.to_sym.inspect},
                          :in      => possible_values_for_#{col}, 
@@ -119,7 +119,7 @@ module LegacyData
         <<-OUTPUT
   validate #{"validate_#{name}".to_sym.inspect }
   def validate_#{name}
-    # TODO: validate this SQL constraint 
+    # TODO: validate this SQL constraint
     <<-SQL
       #{constraints[:custom][name]}
     SQL

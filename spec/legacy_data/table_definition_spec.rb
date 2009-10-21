@@ -8,6 +8,109 @@ describe LegacyData::TableDefinition do
     
   end
   
+  describe 'formatting for model' do
+    describe 'relationships' do
+      before :each do
+        @table_definition = LegacyData::TableDefinition.new({})
+      end
+      
+      it 'should format a hash for a has_many or belongs_to list' do
+        @table_definition.options_to_s({:foreign_key=>:posts_id, :class_name=>'SomeClass'}).should == ':class_name => "SomeClass", :foreign_key => :posts_id'
+      end
+    end
+    
+    describe 'constraints' do
+      it 'should generate  commented lines for multi column unique constraints' do
+        table_definition = LegacyData::TableDefinition.new(:constraints => {:multi_column_unique => [[:author, :title], 
+                                                                                                     [:address, :phone]]
+                                                                      })
+        table_definition.multi_column_unique_constraints_to_s.should == ["#validates_uniqueness_of_multiple_column_constraint [:author, :title]",
+                                                                         "#validates_uniqueness_of_multiple_column_constraint [:address, :phone]"]
+      end
+
+      it 'should generate inclusion of constraints with a method returning possible values' do
+        table_definition = LegacyData::TableDefinition.new(:constraints => {:inclusion_of => {:flag  => ['Y', 'N'],
+                                                                                              :state => ['MA', 'NY']}
+                                                                      })
+        table_definition.inclusion_of_constraints_to_s.first.should == <<-RB
+  def self.possible_values_for_state
+    ["MA", "NY"]
+  end
+  validates_inclusion_of :state,
+                         :in      => possible_values_for_state, 
+                         :message => "is not one of (\#{possible_values_for_state.join(', ')})"
+        RB
+        table_definition.inclusion_of_constraints_to_s.second.should == <<-RB
+  def self.possible_values_for_flag
+    ["Y", "N"]
+  end
+  validates_inclusion_of :flag,
+                         :in      => possible_values_for_flag, 
+                         :message => "is not one of (\#{possible_values_for_flag.join(', ')})"
+        RB
+      end
+
+      it 'should generate inclusion of constraints with a method returning possible values' do
+        table_definition = LegacyData::TableDefinition.new(:constraints => {:custom => {:my_constraint => "some plsql logic",
+                                                                                        :another_one   => "multi\nline\n  plsql logic"}
+                                                                      })
+        table_definition.custom_constraints_to_s.should include <<-RB
+  validate :validate_my_constraint
+  def validate_my_constraint
+    # TODO: validate this SQL constraint
+    <<-SQL
+      some plsql logic
+    SQL
+  end
+        RB
+        table_definition.custom_constraints_to_s.should include <<-RB
+  validate :validate_another_one
+  def validate_another_one
+    # TODO: validate this SQL constraint
+    <<-SQL
+      multi
+line
+  plsql logic
+    SQL
+  end
+        RB
+      end
+
+      describe 'numericality constraints' do
+        before :each do
+          @table_definition = LegacyData::TableDefinition.new(:constraints => {:numericality_of => {:allow_nil        => ['col1', 'col2'],
+                                                                                                   :do_not_allow_nil => ['col3', 'col4']}
+                                                                               }
+                                                              )
+        end
+        it 'should generate numericality constraints for those that allow nil and those that do not' do
+          @table_definition.numericality_of_constraints_to_s.should == ["validates_numericality_of :col1, :col2, {:allow_nil=>true}", 
+                                                                        "validates_numericality_of :col3, :col4"]
+        end
+
+        it 'should not fail when there are no nullable constraints' do
+          @table_definition.constraints[:numericality_of][:allow_nil] = nil
+          @table_definition.numericality_of_constraints_to_s.should == [[], 
+                                                                        "validates_numericality_of :col3, :col4"]
+        end
+
+        it 'should not fail when there are no non-nullable constraints' do
+          @table_definition.constraints[:numericality_of][:do_not_allow_nil] = nil
+          @table_definition.numericality_of_constraints_to_s.should == ["validates_numericality_of :col1, :col2, {:allow_nil=>true}", 
+                                                                        []]
+        end
+
+        it 'should not fail when there are no nullable or non-nullable constraints' do
+          @table_definition.constraints[:numericality_of][:allow_nil]        = nil
+          @table_definition.constraints[:numericality_of][:do_not_allow_nil] = nil
+          @table_definition.numericality_of_constraints_to_s.should == [[], 
+                                                                        []]
+        end
+      end
+    end
+
+  end
+  
   describe 'join table' do
     before :each do
       @foreign_key_columns = [mock(:name=>'one_table_id'),  mock(:name=>'another_table_id') ]
