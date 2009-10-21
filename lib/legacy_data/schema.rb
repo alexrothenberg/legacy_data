@@ -28,14 +28,14 @@ module LegacyData
       if table_name
         add_pending_table(table_name)
       else
-        LegacyData::Schema.tables.sort.each {|table| add_pending_table(table) }
+        self.tables.each {|table| add_pending_table(table) }
       end
     end
     def self.add_pending_table table_name
       table_definitions[table_name] = :pending if table_definitions[table_name].nil?
     end
     def self.next_table_to_process
-      table_definitions.keys.detect {|table_name| table_definitions[table_name] == :pending }
+      table_definitions.keys.map(&:to_s).sort.detect {|table_name| table_definitions[table_name] == :pending }
     end
     def self.clear_table_definitions
       @tables = {}

@@ -6,8 +6,8 @@ class Authmap < ActiveRecord::Base
   
 
   # Constraints
-  validates_uniqueness_of :authname
-  validates_presence_of :uid, :authname, :module
   validates_numericality_of :uid
+  validates_presence_of :uid, :authname, :module
+  validates_uniqueness_of :authname
 end
 

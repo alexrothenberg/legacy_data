@@ -18,7 +18,7 @@ describe 'Models From Tables generator' do
                                               :columns      => [stub(:name=>'title', :null=>false, :type=>:string), 
                                                                 stub(:name=>'body',  :null=>false, :type=>:string)],
                                               :primary_key  => 'id',
-                                              :relations    => { :has_many               =>{'comments'=>{:foreign_key=>'comment_id'}}, 
+                                              :relations    => { :has_many               =>{'comments'=>{:foreign_key=>:comment_id}}, 
                                                                  :belongs_to             =>{}, 
                                                                  :has_and_belongs_to_many=>{}
                                                                },

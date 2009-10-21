@@ -6,8 +6,8 @@ class Tag < ActiveRecord::Base
   
 
   # Constraints
-  validates_uniqueness_of :tag
-  validates_presence_of :tag, :refcount
   validates_numericality_of :refcount
+  validates_presence_of :tag, :refcount
+  validates_uniqueness_of :tag
 end
 

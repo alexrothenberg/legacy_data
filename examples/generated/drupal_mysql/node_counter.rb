@@ -6,7 +6,7 @@ class NodeCounter < ActiveRecord::Base
   
 
   # Constraints
-  validates_presence_of :totalcount, :daycount, :timestamp
   validates_numericality_of :totalcount, :daycount, :timestamp
+  validates_presence_of :totalcount, :daycount, :timestamp
 end
 

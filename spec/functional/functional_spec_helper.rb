@@ -1,5 +1,8 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
+ADAPTER = ENV['ADAPTER']
+
+
 def initialize_connection connection_info
   ActiveRecord::Base.establish_connection(connection_info)
 

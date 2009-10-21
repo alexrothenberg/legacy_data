@@ -19,7 +19,7 @@ class ModelsFromTablesGenerator < Rails::Generator::Base
                              File.join('app/models', "#{analyzed_table[:class_name].underscore}.rb"), 
                              :assigns => {:definition => analyzed_table}
 
-        add_factory_girl_factory analyzed_table.to_hash if options[:with_factories]
+        add_factory_girl_factory analyzed_table if options[:with_factories]
 
       end
     end

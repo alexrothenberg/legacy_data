@@ -6,7 +6,7 @@ class VocabularyNodeType < ActiveRecord::Base
   
 
   # Constraints
-  validates_presence_of :vid, :type
   validates_numericality_of :vid
+  validates_presence_of :vid, :type
 end
 

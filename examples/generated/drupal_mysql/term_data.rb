@@ -6,7 +6,7 @@ class TermData < ActiveRecord::Base
   
 
   # Constraints
-  validates_presence_of :vid, :name, :weight
   validates_numericality_of :vid, :weight
+  validates_presence_of :vid, :name, :weight
 end
 

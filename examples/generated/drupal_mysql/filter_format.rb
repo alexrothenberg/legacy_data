@@ -6,8 +6,8 @@ class FilterFormat < ActiveRecord::Base
   
 
   # Constraints
-  validates_uniqueness_of :name
-  validates_presence_of :name, :roles, :cache
   validates_numericality_of :cache
+  validates_presence_of :name, :roles, :cache
+  validates_uniqueness_of :name
 end
 

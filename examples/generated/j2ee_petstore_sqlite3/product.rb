@@ -6,7 +6,7 @@ class Product < ActiveRecord::Base
   
 
   # Constraints
-  validates_uniqueness_of :productid
   validates_presence_of :categoryid, :name, :description
+  validates_uniqueness_of :productid
 end
 

@@ -6,7 +6,7 @@ class Permission < ActiveRecord::Base
   
 
   # Constraints
-  validates_presence_of :rid, :tid
   validates_numericality_of :rid, :tid
+  validates_presence_of :rid, :tid
 end
 

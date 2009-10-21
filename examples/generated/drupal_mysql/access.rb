@@ -6,7 +6,7 @@ class Access < ActiveRecord::Base
   
 
   # Constraints
-  validates_presence_of :mask, :type, :status
   validates_numericality_of :status
+  validates_presence_of :mask, :type, :status
 end
 

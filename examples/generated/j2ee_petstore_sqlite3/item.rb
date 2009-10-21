@@ -6,8 +6,8 @@ class Item < ActiveRecord::Base
   
 
   # Constraints
-  validates_uniqueness_of :itemid
-  validates_presence_of :productid, :name, :description, :price, :address_addressid, :contactinfo_contactinfoid, :totalscore, :numberofvotes, :disabled
   validates_numericality_of :totalscore, :numberofvotes, :disabled
+  validates_presence_of :productid, :name, :description, :price, :address_addressid, :contactinfo_contactinfoid, :totalscore, :numberofvotes, :disabled
+  validates_uniqueness_of :itemid
 end
 

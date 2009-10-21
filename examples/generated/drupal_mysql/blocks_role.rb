@@ -6,7 +6,7 @@ class BlocksRole < ActiveRecord::Base
   
 
   # Constraints
-  validates_presence_of :module, :delta, :rid
   validates_numericality_of :rid
+  validates_presence_of :module, :delta, :rid
 end
 

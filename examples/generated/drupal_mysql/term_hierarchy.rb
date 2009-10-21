@@ -6,7 +6,7 @@ class TermHierarchy < ActiveRecord::Base
   
 
   # Constraints
-  validates_presence_of :tid, :parent
   validates_numericality_of :tid, :parent
+  validates_presence_of :tid, :parent
 end
 

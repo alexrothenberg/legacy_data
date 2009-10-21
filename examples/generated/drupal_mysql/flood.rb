@@ -6,7 +6,7 @@ class Flood < ActiveRecord::Base
   
 
   # Constraints
-  validates_presence_of :event, :hostname, :timestamp
   validates_numericality_of :timestamp
+  validates_presence_of :event, :hostname, :timestamp
 end
 

@@ -6,7 +6,7 @@ class Address < ActiveRecord::Base
   
 
   # Constraints
-  validates_uniqueness_of :addressid
   validates_presence_of :street1, :city, :state, :zip, :latitude, :longitude
+  validates_uniqueness_of :addressid
 end
 

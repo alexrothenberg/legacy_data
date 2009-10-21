@@ -7,7 +7,7 @@ class TermRelation < ActiveRecord::Base
 
   # Constraints
   #validates_uniqueness_of_multiple_column_constraint ["tid1", "tid2"]
-  validates_presence_of :tid1, :tid2
   validates_numericality_of :tid1, :tid2
+  validates_presence_of :tid1, :tid2
 end
 

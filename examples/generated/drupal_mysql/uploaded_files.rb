@@ -6,7 +6,7 @@ class UploadedFiles < ActiveRecord::Base
   
 
   # Constraints
-  validates_presence_of :uid, :filename, :filepath, :filemime, :filesize, :status, :timestamp
   validates_numericality_of :uid, :filesize, :status, :timestamp
+  validates_presence_of :uid, :filename, :filepath, :filemime, :filesize, :status, :timestamp
 end
 

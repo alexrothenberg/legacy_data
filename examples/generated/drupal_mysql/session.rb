@@ -6,7 +6,7 @@ class Session < ActiveRecord::Base
   
 
   # Constraints
-  validates_presence_of :uid, :hostname, :timestamp, :cache
   validates_numericality_of :uid, :timestamp, :cache
+  validates_presence_of :uid, :hostname, :timestamp, :cache
 end
 

@@ -6,7 +6,7 @@ class History < ActiveRecord::Base
   
 
   # Constraints
-  validates_presence_of :uid, :nid, :timestamp
   validates_numericality_of :uid, :nid, :timestamp
+  validates_presence_of :uid, :nid, :timestamp
 end
 

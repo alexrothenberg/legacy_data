@@ -6,7 +6,7 @@ class Batch < ActiveRecord::Base
   
 
   # Constraints
-  validates_presence_of :token, :timestamp
   validates_numericality_of :timestamp
+  validates_presence_of :token, :timestamp
 end
 

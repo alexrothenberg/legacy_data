@@ -7,7 +7,7 @@ class Filter < ActiveRecord::Base
 
   # Constraints
   #validates_uniqueness_of_multiple_column_constraint ["format", "module", "delta"]
-  validates_presence_of :format, :module, :delta, :weight
   validates_numericality_of :format, :delta, :weight
+  validates_presence_of :format, :module, :delta, :weight
 end
 

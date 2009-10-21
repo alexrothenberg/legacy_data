@@ -6,19 +6,6 @@ describe LegacyData::TableDefinition do
       LegacyData::TableDefinition.new({option=>'some value'})[option].should == 'some value'
     end
     
-    it 'should allow you to set class_name' do
-      table_definition = LegacyData::TableDefinition.new({})
-      table_definition.class_name = 'NewClassName'
-      table_definition[:class_name].should == 'NewClassName'
-    end
-    
-    it 'should reveal itself as a hash' do
-      params = {}
-      [:class_name, :table_name, :columns, :primary_key, :relations, :constraints].each { |field| params[field] = "#{field}_value" } 
-      table_definition = LegacyData::TableDefinition.new(params)
-
-      table_definition.to_hash.should == params.merge(:model => table_definition)
-    end
   end
   
   describe 'join table' do

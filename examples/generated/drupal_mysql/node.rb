@@ -6,8 +6,8 @@ class Node < ActiveRecord::Base
   
 
   # Constraints
-  validates_uniqueness_of :vid
-  validates_presence_of :vid, :type, :language, :title, :uid, :status, :created, :changed, :comment, :promote, :moderate, :sticky, :tnid, :translate
   validates_numericality_of :vid, :uid, :status, :created, :changed, :comment, :promote, :moderate, :sticky, :tnid, :translate
+  validates_presence_of :vid, :type, :language, :title, :uid, :status, :created, :changed, :comment, :promote, :moderate, :sticky, :tnid, :translate
+  validates_uniqueness_of :vid
 end
 

@@ -6,7 +6,7 @@ class CacheBlock < ActiveRecord::Base
   
 
   # Constraints
-  validates_presence_of :expire, :created, :serialized
   validates_numericality_of :expire, :created, :serialized
+  validates_presence_of :expire, :created, :serialized
 end
 

@@ -6,7 +6,7 @@ class System < ActiveRecord::Base
   
 
   # Constraints
-  validates_presence_of :name, :type, :owner, :status, :throttle, :bootstrap, :schema_version, :weight
   validates_numericality_of :status, :throttle, :bootstrap, :schema_version, :weight
+  validates_presence_of :name, :type, :owner, :status, :throttle, :bootstrap, :schema_version, :weight
 end
 

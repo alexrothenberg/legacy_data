@@ -6,7 +6,7 @@ class SellerContactInfo < ActiveRecord::Base
   
 
   # Constraints
-  validates_uniqueness_of :contactinfoid
   validates_presence_of :lastname, :firstname, :email
+  validates_uniqueness_of :contactinfoid
 end
 

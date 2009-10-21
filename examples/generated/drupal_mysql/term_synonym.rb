@@ -6,7 +6,7 @@ class TermSynonym < ActiveRecord::Base
   
 
   # Constraints
-  validates_presence_of :tid, :name
   validates_numericality_of :tid
+  validates_presence_of :tid, :name
 end
 

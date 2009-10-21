@@ -6,7 +6,7 @@ class Watchdog < ActiveRecord::Base
   
 
   # Constraints
-  validates_presence_of :uid, :type, :message, :variables, :severity, :link, :location, :hostname, :timestamp
   validates_numericality_of :uid, :severity, :timestamp
+  validates_presence_of :uid, :type, :message, :variables, :severity, :link, :location, :hostname, :timestamp
 end
 

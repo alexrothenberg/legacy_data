@@ -6,7 +6,7 @@ class Category < ActiveRecord::Base
   
 
   # Constraints
-  validates_uniqueness_of :categoryid
   validates_presence_of :name, :description
+  validates_uniqueness_of :categoryid
 end
 

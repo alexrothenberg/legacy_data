@@ -6,7 +6,7 @@ class TermNode < ActiveRecord::Base
   
 
   # Constraints
-  validates_presence_of :nid, :vid, :tid
   validates_numericality_of :nid, :vid, :tid
+  validates_presence_of :nid, :vid, :tid
 end
 

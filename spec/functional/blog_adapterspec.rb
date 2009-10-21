@@ -1,30 +1,32 @@
 require File.expand_path(File.dirname(__FILE__) + '/functional_spec_helper')
 
 
-describe 'Generating models from a blog database' do
+describe "Generating models from a blog #{ENV['ADAPTER']} database" do
   before :all do
-    adapter = ENV['ADAPTER']
-    abort('No adapter specified') if adapter.nil?
-    connection_info = connection_info_for(:blog, adapter) 
-    pending("The #{:blog} spec does not run for #{adapter}") if connection_info.nil?
+    @adapter = ENV['ADAPTER']
+    @example = :blog
+
+    connection_info = connection_info_for(@example, @adapter) 
+    pending("The #{@example} spec does not run for #{@adapter}") if connection_info.nil?
     initialize_connection connection_info
+
     require File.expand_path(File.dirname(__FILE__) + '/../../examples/blog_migration')
     create_blog_tables
         
-    silence_warnings { RAILS_ROOT = File.expand_path("#{File.dirname(__FILE__)}/../../output/functional/blog_#{adapter}") } 
+    silence_warnings { RAILS_ROOT = File.expand_path("#{File.dirname(__FILE__)}/../../output/functional/#{@example}_#{@adapter}") } 
     FileUtils.mkdir_p(RAILS_ROOT + '/app/models')
     FileUtils.mkdir_p(RAILS_ROOT + '/spec')
     
     LegacyData::Schema.stub!(:log)    
 
-    @expected_directory = File.expand_path("#{File.dirname(__FILE__)}/../../examples/generated/blog_#{adapter}") 
+    @expected_directory = File.expand_path("#{File.dirname(__FILE__)}/../../examples/generated/#{@example}_#{@adapter}") 
   end
   after :all do
     Object.send(:remove_const, :RAILS_ROOT)
   end
   
   before :each do #
-    pending("oracle does not yet work with t.foreign_key table creation") if ENV['ADAPTER'] == 'oracle'
+    pending("oracle does not yet work with t.foreign_key table creation") if @adapter == 'oracle'
     FileUtils.rm(RAILS_ROOT + '/spec/factories.rb', :force => true)
     invoke_generator('models_from_tables', ["--with-factories"], :create)
   end

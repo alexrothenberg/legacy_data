@@ -6,7 +6,7 @@ class IdGen < ActiveRecord::Base
   
 
   # Constraints
-  validates_presence_of :gen_value
   validates_numericality_of :gen_value
+  validates_presence_of :gen_value
 end
 
