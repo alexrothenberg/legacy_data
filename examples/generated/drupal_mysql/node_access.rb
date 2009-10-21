@@ -1,6 +1,6 @@
 class NodeAccess < ActiveRecord::Base
   set_table_name  :node_access
-  
+  set_primary_key :no_primary_key
   
   # Relationships
   

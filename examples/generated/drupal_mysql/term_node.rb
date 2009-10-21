@@ -1,6 +1,6 @@
 class TermNode < ActiveRecord::Base
   set_table_name  :term_node
-  
+  set_primary_key :no_primary_key
   
   # Relationships
   

@@ -88,6 +88,7 @@ module LegacyData
         elsif connection.respond_to?(:primary_key)
           @pk = connection.primary_key(table_name)
         end
+        @pk = 'no_primary_key' if @pk.nil?
       end
       @pk
     end

@@ -1,11 +1,11 @@
-class <%= class_name -%> < ActiveRecord::Base
-  <%= "set_table_name  #{table_name.downcase.to_sym.inspect}" unless table_name == class_name.underscore.pluralize %>
-  <%= "set_primary_key #{primary_key.to_sym.inspect}" if primary_key && primary_key != 'id' %>
+class <%= definition.class_name -%> < ActiveRecord::Base
+  <%= "set_table_name  #{definition.table_name.downcase.to_sym.inspect}" if definition.unconventional_table_name?  %>
+  <%= "set_primary_key #{definition.primary_key.to_sym.inspect}"         if definition.unconventional_primary_key? %>
   
   # Relationships
-  <%= model.relationships_to_s %>
+  <%= definition.relationships_to_s %>
 
   # Constraints
-  <%= model.constraints_to_s %>
+  <%= definition.constraints_to_s   %>
 end
 

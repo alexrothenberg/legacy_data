@@ -16,6 +16,15 @@ module LegacyData
       hash
     end
 
+    def unconventional_table_name?
+      table_name != class_name.underscore.pluralize
+    end
+
+    def unconventional_primary_key?
+      puts self.inspect if primary_key.nil?
+      primary_key != 'id'
+    end
+
     def relationships_to_s
       s = []
       [:has_many, :has_one, :belongs_to, :has_and_belongs_to_many].each do |relation_type|

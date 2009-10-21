@@ -17,7 +17,7 @@ class ModelsFromTablesGenerator < Rails::Generator::Base
         m.class_collisions :class_path, analyzed_table[:class_name]
         m.template           'model.rb',      
                              File.join('app/models', "#{analyzed_table[:class_name].underscore}.rb"), 
-                             :assigns => analyzed_table.to_hash
+                             :assigns => {:definition => analyzed_table}
 
         add_factory_girl_factory analyzed_table.to_hash if options[:with_factories]
 

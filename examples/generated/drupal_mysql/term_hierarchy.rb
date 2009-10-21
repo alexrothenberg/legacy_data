@@ -1,6 +1,6 @@
 class TermHierarchy < ActiveRecord::Base
   set_table_name  :term_hierarchy
-  
+  set_primary_key :no_primary_key
   
   # Relationships
   

@@ -1,6 +1,6 @@
 class History < ActiveRecord::Base
   set_table_name  :history
-  
+  set_primary_key :no_primary_key
   
   # Relationships
   
