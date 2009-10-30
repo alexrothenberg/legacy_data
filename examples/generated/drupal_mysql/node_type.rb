@@ -1,7 +1,7 @@
 class NodeType < ActiveRecord::Base
   set_table_name  :node_type
   set_primary_key :type
-  
+
   # Relationships
   
 

@@ -1,7 +1,5 @@
 class Tag < ActiveRecord::Base
-  
-  
-  
+
   # Relationships
   
 

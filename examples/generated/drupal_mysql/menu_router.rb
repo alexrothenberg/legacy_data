@@ -1,7 +1,7 @@
 class MenuRouter < ActiveRecord::Base
   set_table_name  :menu_router
   set_primary_key :path
-  
+
   # Relationships
   
 

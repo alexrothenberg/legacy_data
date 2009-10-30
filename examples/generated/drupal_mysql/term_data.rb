@@ -1,7 +1,7 @@
 class TermData < ActiveRecord::Base
   set_table_name  :term_data
   set_primary_key :tid
-  
+
   # Relationships
   
 

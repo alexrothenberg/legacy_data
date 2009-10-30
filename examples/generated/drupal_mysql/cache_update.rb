@@ -1,7 +1,7 @@
 class CacheUpdate < ActiveRecord::Base
   set_table_name  :cache_update
   set_primary_key :cid
-  
+
   # Relationships
   
 

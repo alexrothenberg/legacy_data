@@ -1,7 +1,7 @@
 class Access < ActiveRecord::Base
   set_table_name  :access
   set_primary_key :aid
-  
+
   # Relationships
   
 

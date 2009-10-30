@@ -1,7 +1,7 @@
 class CacheForm < ActiveRecord::Base
   set_table_name  :cache_form
   set_primary_key :cid
-  
+
   # Relationships
   
 

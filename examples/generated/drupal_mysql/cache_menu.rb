@@ -1,7 +1,7 @@
 class CacheMenu < ActiveRecord::Base
   set_table_name  :cache_menu
   set_primary_key :cid
-  
+
   # Relationships
   
 

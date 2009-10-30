@@ -1,7 +1,5 @@
 class Post < ActiveRecord::Base
-  
-  
-  
+
   # Relationships
   
 

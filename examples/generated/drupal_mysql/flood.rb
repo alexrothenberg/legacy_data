@@ -1,7 +1,7 @@
 class Flood < ActiveRecord::Base
   set_table_name  :flood
   set_primary_key :fid
-  
+
   # Relationships
   
 

@@ -1,7 +1,7 @@
 class CachePage < ActiveRecord::Base
   set_table_name  :cache_page
   set_primary_key :cid
-  
+
   # Relationships
   
 

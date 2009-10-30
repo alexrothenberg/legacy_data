@@ -1,7 +1,7 @@
 class Item < ActiveRecord::Base
   set_table_name  :item
   set_primary_key :itemid
-  
+
   # Relationships
   belongs_to :address,           :foreign_key => :address_addressid
   belongs_to :product,           :foreign_key => :productid

@@ -1,7 +1,5 @@
 class Post < ActiveRecord::Base
-  
-  
-  
+
   # Relationships
   has_many :comments, :foreign_key => :comment_id
 

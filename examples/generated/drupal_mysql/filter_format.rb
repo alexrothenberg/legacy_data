@@ -1,7 +1,6 @@
 class FilterFormat < ActiveRecord::Base
-  
   set_primary_key :format
-  
+
   # Relationships
   
 

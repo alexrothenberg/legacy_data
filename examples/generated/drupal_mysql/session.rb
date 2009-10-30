@@ -1,7 +1,6 @@
 class Session < ActiveRecord::Base
-  
   set_primary_key :sid
-  
+
   # Relationships
   
 

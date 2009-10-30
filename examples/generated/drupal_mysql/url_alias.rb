@@ -1,7 +1,7 @@
 class UrlAlias < ActiveRecord::Base
   set_table_name  :url_alias
   set_primary_key :pid
-  
+
   # Relationships
   
 

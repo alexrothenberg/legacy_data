@@ -1,7 +1,6 @@
 class NodeCommentStatistic < ActiveRecord::Base
-  
   set_primary_key :nid
-  
+
   # Relationships
   
 

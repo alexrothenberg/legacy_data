@@ -1,7 +1,6 @@
 class Filter < ActiveRecord::Base
-  
   set_primary_key :fid
-  
+
   # Relationships
   
 

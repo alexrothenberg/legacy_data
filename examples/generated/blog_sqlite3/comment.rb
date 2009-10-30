@@ -1,7 +1,5 @@
 class Comment < ActiveRecord::Base
-  
-  
-  
+
   # Relationships
   
 

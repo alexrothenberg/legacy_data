@@ -1,7 +1,6 @@
 class TagItem < ActiveRecord::Base
   set_table_name  :tag_item
   
-  
   # Relationships
   
 

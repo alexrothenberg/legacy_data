@@ -1,7 +1,7 @@
 class Permission < ActiveRecord::Base
   set_table_name  :permission
   set_primary_key :pid
-  
+
   # Relationships
   
 

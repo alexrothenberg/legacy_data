@@ -1,7 +1,6 @@
 class Box < ActiveRecord::Base
-  
   set_primary_key :bid
-  
+
   # Relationships
   
 

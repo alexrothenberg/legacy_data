@@ -1,7 +1,5 @@
 class Comment < ActiveRecord::Base
-  
-  
-  
+
   # Relationships
   belongs_to :post, :dependent => :destroy, :foreign_key => :post_id
 

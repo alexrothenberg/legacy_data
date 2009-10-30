@@ -1,7 +1,7 @@
 class System < ActiveRecord::Base
   set_table_name  :system
   set_primary_key :filename
-  
+
   # Relationships
   
 

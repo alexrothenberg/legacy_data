@@ -1,7 +1,7 @@
 class Watchdog < ActiveRecord::Base
   set_table_name  :watchdog
   set_primary_key :wid
-  
+
   # Relationships
   
 

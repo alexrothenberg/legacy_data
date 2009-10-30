@@ -1,7 +1,6 @@
 class Comment < ActiveRecord::Base
-  
   set_primary_key :cid
-  
+
   # Relationships
   
 

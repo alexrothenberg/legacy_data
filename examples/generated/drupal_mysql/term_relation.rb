@@ -1,7 +1,7 @@
 class TermRelation < ActiveRecord::Base
   set_table_name  :term_relation
   set_primary_key :trid
-  
+
   # Relationships
   
 

@@ -1,7 +1,6 @@
 class Block < ActiveRecord::Base
-  
   set_primary_key :bid
-  
+
   # Relationships
   
 

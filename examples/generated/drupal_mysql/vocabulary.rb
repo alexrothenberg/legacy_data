@@ -1,7 +1,7 @@
 class Vocabulary < ActiveRecord::Base
   set_table_name  :vocabulary
   set_primary_key :vid
-  
+
   # Relationships
   
 

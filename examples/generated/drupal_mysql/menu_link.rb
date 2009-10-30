@@ -1,7 +1,6 @@
 class MenuLink < ActiveRecord::Base
-  
   set_primary_key :mlid
-  
+
   # Relationships
   
 

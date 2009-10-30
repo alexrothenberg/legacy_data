@@ -1,7 +1,7 @@
 class Batch < ActiveRecord::Base
   set_table_name  :batch
   set_primary_key :bid
-  
+
   # Relationships
   
 

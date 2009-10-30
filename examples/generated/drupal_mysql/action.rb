@@ -1,7 +1,6 @@
 class Action < ActiveRecord::Base
-  
   set_primary_key :aid
-  
+
   # Relationships
   
 

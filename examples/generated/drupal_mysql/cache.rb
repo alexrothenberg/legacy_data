@@ -1,7 +1,7 @@
 class Cache < ActiveRecord::Base
   set_table_name  :cache
   set_primary_key :cid
-  
+
   # Relationships
   
 

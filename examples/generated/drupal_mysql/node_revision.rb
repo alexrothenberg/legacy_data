@@ -1,7 +1,6 @@
 class NodeRevision < ActiveRecord::Base
-  
   set_primary_key :vid
-  
+
   # Relationships
   
 

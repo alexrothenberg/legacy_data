@@ -1,7 +1,7 @@
 class Tag < ActiveRecord::Base
   set_table_name  :tag
   set_primary_key :tagid
-  
+
   # Relationships
   
 

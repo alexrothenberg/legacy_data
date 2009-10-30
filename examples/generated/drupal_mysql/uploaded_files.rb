@@ -1,7 +1,7 @@
 class UploadedFiles < ActiveRecord::Base
   set_table_name  :files
   set_primary_key :fid
-  
+
   # Relationships
   
 

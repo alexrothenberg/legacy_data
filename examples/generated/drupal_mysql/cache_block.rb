@@ -1,7 +1,7 @@
 class CacheBlock < ActiveRecord::Base
   set_table_name  :cache_block
   set_primary_key :cid
-  
+
   # Relationships
   
 
