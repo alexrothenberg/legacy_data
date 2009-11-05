@@ -24,11 +24,11 @@ The `models_from_tables` generator in the `legacy_data` gem can help!  This gene
 
 ### Examples
 
-Several examples come with the gem source in the [examples](examples) folder.  These include 
+Several examples come with the gem source in the [examples](http://github.com/alexrothenberg/legacy_data/tree/master/examples/) folder.  These include 
 
-- a simple blog for mysql and sqlite 
-- the j2ee petstore example for mysql, sqlite and oracle
-- the drupal 6.14 database in mysql 
+- A simple blog database tested with MySQL and Sqlite3
+- The Drupal 6.14 database tested with MySQL
+- The J2EE Petstore example tested with MySQL, Sqlite3 and Oracle
 
 ## What kind of information can it extract from the database?
 
@@ -41,12 +41,11 @@ in your ActiveRecord models
 
 It will generate the following types of validation constraints in your models
 
-- `validates_uniqueness_of`   - For columns where the database has an index that enforces uniqueness
-- `validates_presence_of`     - When the database column is non-nullable
-- `validates_inclusion_of`    - For non-nullable boolean columns and custom constraints with a SQL rule "flag IN ('Y', 'N')"
-- `validates_numericality_of` - For integer columns (nullable and non-nullable)
-- `custom validation`         - For custom SQL validation rules in the database it puts a placeholder in your model
-                                with the original SQL for you to translate into Ruby
+- **validates_uniqueness_of**   - For columns where the database has an index that enforces uniqueness
+- **validates_presence_of**     - When the database column is non-nullable
+- **validates_inclusion_of**    - For non-nullable boolean columns and custom constraints with a SQL rule "flag IN ('Y', 'N')"
+- **validates_numericality_of** - For integer columns (nullable and non-nullable)
+- **custom validation**         - For custom SQL validation rules in the database it puts a placeholder in your model with the original SQL for you to translate into Ruby
 
 ###Non-Rails naming conventions
 
@@ -72,11 +71,7 @@ class Post < ActiveRecord::Base
 end
 </code></pre>
 
-- Class Names  - It named the model `Post` instead of the Rails convention `Tbpost`.
-                 The generator could not do this itself but knowing the conventions will often not apply to legacy databases
-                 it pauses after spidering the database giving you a chance to override the table to class name mapping.  
-                 It generates a yaml file `app/models/table_mappings.yml` where you can verify or change any class name before 
-                 proceeding to generate the models. 
+- Class Names  - It named the model `Post` instead of the Rails convention `Tbpost`. The generator could not do this itself but knowing the conventions will often not apply to legacy databases it pauses after spidering the database giving you a chance to override the table to class name mapping.  It generates a yaml file `app/models/table_mappings.yml` where you can verify or change any class name before  proceeding to generate the models. 
 - Table Names  - It overrode the table name since the actual name `tbpost` does not match the Rails naming convention `posts`
 - Primary Keys - It overrode the primary key since the actual column `postid` does not match the Rails naming convention `id`
 - Foreign Keys - It overrode the foreign key on the comment table to be `postid` instead of the Rails naming convention `id`
