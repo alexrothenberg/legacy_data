@@ -71,10 +71,10 @@ class Post < ActiveRecord::Base
 end
 </code></pre>
 
-- Class Names  - It named the model `Post` instead of the Rails convention `Tbpost`. The generator could not do this itself but knowing the conventions will often not apply to legacy databases it pauses after spidering the database giving you a chance to override the table to class name mapping.  It generates a yaml file `app/models/table_mappings.yml` where you can verify or change any class name before  proceeding to generate the models. 
-- Table Names  - It overrode the table name since the actual name `tbpost` does not match the Rails naming convention `posts`
-- Primary Keys - It overrode the primary key since the actual column `postid` does not match the Rails naming convention `id`
-- Foreign Keys - It overrode the foreign key on the comment table to be `postid` instead of the Rails naming convention `id`
+- **Class Names**  - It named the model *Post* instead of the Rails convention *Tbpost*. The generator could not do this itself but knowing the conventions will often not apply to legacy databases it pauses after spidering the database giving you a chance to override the table to class name mapping.  It generates a yaml file `app/models/table_mappings.yml` where you can verify or change any class name before  proceeding to generate the models. 
+- **Table Names**  - It overrode the table name since the actual name *tbpost* does not match the Rails naming convention *posts*
+- **Primary Keys** - It overrode the primary key since the actual column *postid* does not match the Rails naming convention *id*
+- **Foreign Keys** - It overrode the foreign key on the comment table to be *postid* instead of the Rails naming convention *id*
 
 
 # Copyright
