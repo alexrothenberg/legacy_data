@@ -1,8 +1,10 @@
 # Legacy Data
 
-The canonical way to start a Rails project is outside-in starting with the UI and working your way down through the controller and model until you create actual database tables with a migration.  That's great when you're starting from scratch but what can you do when you've already got an existing database you need to build an application on top of?  
+Getting started on a Rails project with a large existing database can be daunting.  How to you extract all the information that's 
+encoded in the database?  Do you have to understand the entire data model before you get started?  The `models_from_tables` generator 
+in the `legacy_data` gem can help!  This generator looks into your existing database and generates ActiveRecord models based on the 
+information encoded in it.
 
-The `models_from_tables` generator in the `legacy_data` gem can help!  This generator will look into your existing database to understand the information encoded in there then generate models for those tables.
 
 ## How to use it
 
@@ -19,6 +21,10 @@ The `models_from_tables` generator in the `legacy_data` gem can help!  This gene
 - If you *really* only want the comments table tell it not to follow any foreign_keys
 
   `script/generate script/generate models_from_tables --table-name comments --skip-associated`
+
+- If you use [factory girl](http://github.com/thoughtbot/factory_girl) it will generate a simple factory for each model it generates
+
+  `script/generate script/generate models_from_tables --table-name comments --with-factories`
 
 (You do need to install the plugin `gem install legacy_data` as long as http://gemcutter.org is one of your gem sources)
 
