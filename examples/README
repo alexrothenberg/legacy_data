@@ -1,0 +1,11 @@
+This directory contains examples showing what the generator can do.  
+The generator is validated against these examples when its functional test suite is run.
+
+There are 3 examples
+
+* A simple blog database tested with MySQL and Sqlite3
+* The Drupal 6.14 database tested with MySQL
+* The J2EE Petstore example tested with MySQL, Sqlite3 and Oracle
+
+They have been tested with MySQL, Sqlite3 and Oracle and the pregenerated output is available in the 
+generated directory with the example and database name part of the subdirectory name.

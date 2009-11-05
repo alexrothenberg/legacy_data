@@ -34,7 +34,8 @@ module LegacyData
       save_dictionary
       self.class.log <<-MSG
 Done analyzing the tables.  
-  Please review the class names shown above.  If any do not look correct (for example it did not separate the words with CamelCase) please supply the correct mappings by editing the file #{LegacyData::TableClassNameMapper.dictionary_file_name}.  
+  Automatic class names written to '#{LegacyData::TableClassNameMapper.dictionary_file_name}'
+  Since the database probably does not follow Rails naming conventions you should take a look at the class names and update them in that file. 
   Once you're done hit <enter> to continue generating the models"
       MSG
       gets
