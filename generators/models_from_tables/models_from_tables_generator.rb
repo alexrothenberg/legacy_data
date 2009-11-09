@@ -3,23 +3,25 @@ require File.dirname(__FILE__) + '/../../lib/legacy_data'
 class ModelsFromTablesGenerator < Rails::Generator::Base  
   def manifest
     record do |m|
-      m.directory File.join('app/models')
-
       LegacyData::TableClassNameMapper.naming_convention = options[:table_naming_convention]
       
       analyzed_tables = LegacyData::Schema.analyze(options)
 
-      LegacyData::TableClassNameMapper.let_user_validate_dictionary
+      unless analyzed_tables.blank?
+        m.directory File.join('app/models')
 
-      analyzed_tables.each do |analyzed_table|
-        analyzed_table.class_name = LegacyData::TableClassNameMapper.class_name_for(analyzed_table[:table_name])
+        LegacyData::TableClassNameMapper.let_user_validate_dictionary
 
-        m.class_collisions :class_path, analyzed_table[:class_name]
-        m.template           'model.rb',      
-                             File.join('app/models', "#{analyzed_table[:class_name].underscore}.rb"), 
-                             :assigns => {:definition => analyzed_table}
+        analyzed_tables.each do |analyzed_table|
+          analyzed_table.class_name = LegacyData::TableClassNameMapper.class_name_for(analyzed_table[:table_name])
 
-        add_factory_girl_factory analyzed_table if options[:with_factories]
+          m.class_collisions :class_path, analyzed_table[:class_name]
+          m.template           'model.rb',      
+                               File.join('app/models', "#{analyzed_table[:class_name].underscore}.rb"), 
+                               :assigns => {:definition => analyzed_table}
+
+          add_factory_girl_factory analyzed_table if options[:with_factories]
+        end
 
       end
     end

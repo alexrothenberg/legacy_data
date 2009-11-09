@@ -26,7 +26,11 @@ module LegacyData
     def self.initialize_tables(table_name)
       clear_table_definitions
       if table_name
-        add_pending_table(table_name)
+        if connection.table_exists? table_name
+          add_pending_table(table_name)
+        else
+          log "Warning: Table '#{table_name}' does not exist"
+        end
       else
         self.tables.each {|table| add_pending_table(table) }
       end

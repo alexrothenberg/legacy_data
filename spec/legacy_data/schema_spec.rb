@@ -1,12 +1,46 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe LegacyData::Schema do
+  describe 'which tables to start with' do
+    it 'should start with all tables when no parameter limits us' do
+      LegacyData::Schema.should_receive(:tables).and_return ['table1', 'table2']
+      LegacyData::Schema.initialize_tables(nil)
+      
+      LegacyData::Schema.table_definitions.keys.should == ['table1', 'table2']
+    end
+
+    it 'should start with one table when we pass a valid table name in' do
+      LegacyData::Schema.stub!(:connection=>connection=mock)
+      connection.should_receive(:table_exists?).with('specific_table').and_return(true)
+
+      LegacyData::Schema.initialize_tables('specific_table')
+      
+      LegacyData::Schema.table_definitions.keys.should == ['specific_table']
+    end
+
+    it 'should start with no tableswhen we pass an invalid table name in' do
+      LegacyData::Schema.should_receive(:puts).with("Warning: Table 'specific_table' does not exist")
+      LegacyData::Schema.stub!(:connection=>connection=mock)
+      connection.should_receive(:table_exists?).with('specific_table').and_return(false)
+
+      LegacyData::Schema.initialize_tables('specific_table')
+      
+      LegacyData::Schema.table_definitions.keys.should == []
+    end
+  end
+  
   describe 'following associations' do
     before :each do
+      LegacyData::Schema.stub!(:connection=>connection=mock)
+      connection.stub!(:table_exists?).with('posts'   ).and_return(true)
+      connection.stub!(:table_exists?).with('comments').and_return(true)
+
       LegacyData::Schema.stub!(:analyze_table).with('posts'   ).and_return(@posts_analysis   =mock(:posts,    {:join_table? =>false}))
       LegacyData::Schema.stub!(:analyze_table).with('comments').and_return(@comments_analysis=mock(:comments, {:join_table? =>false}))
-      @posts_analysis.stub!(   :[]).with(:relations).and_return({:belongs_to=>{                                 }, :has_many=>{:comments=>{:foreign_key=>:posts_id}}})
-      @comments_analysis.stub!(:[]).with(:relations).and_return({:belongs_to=>{:posts=>{:foreign_key=>:posts_id}}, :has_many=>{                                    }})
+      @posts_analysis.stub!(   :[]).with(:relations).and_return({:belongs_to=>{                                 }, 
+                                                                 :has_many=>{:comments=>{:foreign_key=>:posts_id}}})
+      @comments_analysis.stub!(:[]).with(:relations).and_return({:belongs_to=>{:posts=>{:foreign_key=>:posts_id}}, 
+                                                                 :has_many=>{                                    }})
     end
     
     it 'should analyze all tables when not given a table to start with' do

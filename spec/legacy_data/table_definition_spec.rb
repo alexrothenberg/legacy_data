@@ -54,7 +54,7 @@ describe LegacyData::TableDefinition do
         table_definition = LegacyData::TableDefinition.new(:constraints => {:custom => {:my_constraint => "some plsql logic",
                                                                                         :another_one   => "multi\nline\n  plsql logic"}
                                                                       })
-        table_definition.custom_constraints_to_s.should include <<-RB
+        table_definition.custom_constraints_to_s.should include(<<-RB )
   validate :validate_my_constraint
   def validate_my_constraint
     # TODO: validate this SQL constraint
@@ -63,7 +63,7 @@ describe LegacyData::TableDefinition do
     SQL
   end
         RB
-        table_definition.custom_constraints_to_s.should include <<-RB
+        table_definition.custom_constraints_to_s.should include(<<-RB)
   validate :validate_another_one
   def validate_another_one
     # TODO: validate this SQL constraint
