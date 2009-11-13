@@ -10,21 +10,21 @@ information encoded in it.
 
 - To generate an ActiveRecord model for each table in the database just type
 
-  `script/generate script/generate models_from_tables`
+  `script/generate models_from_tables`
 
 - If you don't want all tables in the database tell it which table to model
  
-  `script/generate script/generate models_from_tables --table-name comments`
+  `script/generate models_from_tables --table-name comments`
   
   This uses any foreign_key constraints in the database to spider the database and model the comments table and all associated tables.
   
 - If you *really* only want the comments table tell it not to follow any foreign_keys
 
-  `script/generate script/generate models_from_tables --table-name comments --skip-associated`
+  `script/generate models_from_tables --table-name comments --skip-associated`
 
 - If you use [factory girl](http://github.com/thoughtbot/factory_girl) it will generate a simple factory for each model it generates
 
-  `script/generate script/generate models_from_tables --table-name comments --with-factories`
+  `script/generate models_from_tables --table-name comments --with-factories`
 
 (You do need to install the plugin `gem install legacy_data` as long as http://gemcutter.org is one of your gem sources)
 
