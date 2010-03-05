@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{legacy_data}
-  s.version = "0.1.10"
+  s.version = "0.1.11"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alex Rothenberg"]
-  s.date = %q{2009-11-05}
+  s.date = %q{2010-03-05}
   s.description = %q{Create ActiveRecord models from an existing database}
   s.email = %q{alex@alexrothenberg.com}
   s.extra_rdoc_files = [
@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.files = [
     ".document",
      ".gitignore",
+     "History.txt",
      "LICENSE",
      "README.md",
      "Rakefile",
@@ -134,11 +135,10 @@ Gem::Specification.new do |s|
      "spec/models_from_tables_generator_spec.rb",
      "spec/spec_helper.rb"
   ]
-  s.has_rdoc = true
   s.homepage = %q{http://github.com/alexrothenberg/legacy_data}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.2}
+  s.rubygems_version = %q{1.3.6}
   s.summary = %q{Create ActiveRecord models from an existing database}
   s.test_files = [
     "spec/expected/factories.rb",

@@ -1,7 +1,8 @@
 === EDGE 
- 
+* 
+
+=== 0.1.11 2010-03-05
 * Fix for SQLServer and other drivers that do not support constraints  
 
 === 0.1.10 2009-10-05
-
 * Initial release
