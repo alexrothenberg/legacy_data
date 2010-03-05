@@ -1,5 +1,5 @@
 require 'rubygems'
-require 'activerecord'
+require 'active_record'
 # require 'active_record/connection_adapters/oracle_enhanced_adapter'
 
 

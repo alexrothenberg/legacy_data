@@ -185,7 +185,7 @@ module LegacyData
     end
     
     def custom_constraints
-      return [] unless connection.respond_to? :constraints
+      return [[],[]] unless connection.respond_to? :constraints
       custom_constraints, inclusion_constraints = {}, {}
       connection.constraints(table_name).each do |constraint|
         constraint_sql = constraint.second
