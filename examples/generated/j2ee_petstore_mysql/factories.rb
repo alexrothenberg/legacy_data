@@ -1,10 +1,16 @@
-Factory.define :ziplocation do |z|
-  z.city    'some string'
-  z.state   'some string'
+Factory.define :address do |a|
+  a.street1   'some string'
+  a.city      'some string'
+  a.state     'some string'
+  a.zip       'some string'
+  a.latitude  12.3
+  a.longitude 12.3
 end
 
-Factory.define :id_gen do |i|
-  i.gen_value 7
+Factory.define :seller_contact_info do |s|
+  s.lastname      'some string'
+  s.firstname     'some string'
+  s.email         'some string'
 end
 
 Factory.define :category do |c|
@@ -12,20 +18,8 @@ Factory.define :category do |c|
   c.description 'some string'
 end
 
-Factory.define :tag_item do |t|
-  t.tagid  7
-  t.itemid 'some string'
-end
-
-Factory.define :tag do |t|
-  t.tag      'some string'
-  t.refcount 7
-end
-
-Factory.define :product do |p|
-  p.categoryid  'some string'
-  p.name        'some string'
-  p.description 'some string'
+Factory.define :id_gen do |i|
+  i.gen_value 7
 end
 
 Factory.define :item do |i|
@@ -40,18 +34,24 @@ Factory.define :item do |i|
   i.disabled                  7
 end
 
-Factory.define :seller_contact_info do |s|
-  s.lastname      'some string'
-  s.firstname     'some string'
-  s.email         'some string'
+Factory.define :product do |p|
+  p.categoryid  'some string'
+  p.name        'some string'
+  p.description 'some string'
 end
 
-Factory.define :address do |a|
-  a.street1   'some string'
-  a.city      'some string'
-  a.state     'some string'
-  a.zip       'some string'
-  a.latitude  12.3
-  a.longitude 12.3
+Factory.define :tag do |t|
+  t.tag      'some string'
+  t.refcount 7
+end
+
+Factory.define :tag_item do |t|
+  t.tagid  7
+  t.itemid 'some string'
+end
+
+Factory.define :ziplocation do |z|
+  z.city    'some string'
+  z.state   'some string'
 end
 

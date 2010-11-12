@@ -35,8 +35,8 @@ describe LegacyData::Schema do
       connection.stub!(:table_exists?).with('posts'   ).and_return(true)
       connection.stub!(:table_exists?).with('comments').and_return(true)
 
-      LegacyData::Schema.stub!(:analyze_table).with('posts'   ).and_return(@posts_analysis   =mock(:posts,    {:join_table? =>false}))
-      LegacyData::Schema.stub!(:analyze_table).with('comments').and_return(@comments_analysis=mock(:comments, {:join_table? =>false}))
+      LegacyData::Schema.stub!(:analyze_table).with('posts'   ).and_return(@posts_analysis   =mock(:posts,    {:join_table? =>false, :table_name=>'posts'}))
+      LegacyData::Schema.stub!(:analyze_table).with('comments').and_return(@comments_analysis=mock(:comments, {:join_table? =>false, :table_name=>'comments'}))
       @posts_analysis.stub!(   :[]).with(:relations).and_return({:belongs_to=>{                                 }, 
                                                                  :has_many=>{:comments=>{:foreign_key=>:posts_id}}})
       @comments_analysis.stub!(:[]).with(:relations).and_return({:belongs_to=>{:posts=>{:foreign_key=>:posts_id}}, 
@@ -95,7 +95,7 @@ describe LegacyData::Schema do
     end
   
     it 'should have the correct class name' do
-      LegacyData::TableClassNameMapper.should_receive(:class_name_for).with('some_table').and_return('SomeClass')
+      LegacyData::TableClassNameMapper.instance.should_receive(:class_name_for).with('some_table').and_return('SomeClass')
       @schema.class_name.should == 'SomeClass'
     end
   

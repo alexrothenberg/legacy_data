@@ -1,7 +1,7 @@
 module LegacyData
   class TableClassNameMapper
     include Singleton
-    
+
     attr_accessor :naming_convention, :dictionary
     def naming_convention= naming_convention
       @naming_convention = (naming_convention || '*').gsub('*', '(.*)')

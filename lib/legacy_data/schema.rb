@@ -15,7 +15,7 @@ module LegacyData
           end
         end
       end
-      remove_join_tables
+      remove_join_tables.sort_by(&:table_name)
     end
 
     def self.analyze_table table_name

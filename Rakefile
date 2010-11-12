@@ -1,20 +1,19 @@
 require 'rubygems'
+require 'bundler'
+
+begin
+  Bundler.setup(:default, :development)
+  Bundler::GemHelper.install_tasks
+rescue Bundler::BundlerError => e
+  $stderr.puts e.message
+  $stderr.puts "Run `bundle install` to install missing gems"
+  exit e.status_code
+end
 require 'rake'
 
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "legacy_data"
-    gem.summary = %Q{Create ActiveRecord models from an existing database}
-    gem.description = %Q{Create ActiveRecord models from an existing database}
-    gem.email = "alex@alexrothenberg.com"
-    gem.homepage = "http://github.com/alexrothenberg/legacy_data"
-    gem.authors = ["Alex Rothenberg"]
-    gem.add_development_dependency "rspec"
-    gem.add_dependency('activerecord')
-    gem.add_dependency('matthuhiggins-foreigner', '>= 0.2.1')
-    
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
@@ -27,17 +26,27 @@ Spec::Rake::SpecTask.new(:spec) do |spec|
   spec.spec_files = FileList['spec/**/*_spec.rb']
 end
 
+def print_msg msg
+  border = '-'*(msg.size+10)
+  puts border, "---  #{msg}  ---", border
+end
+
 def run_functional_without_aborting(*adapters)
   errors = []
 
   adapters.each do |adapter|
-    begin
-      puts "Running #{adapter} specs"
-      ENV['ADAPTER'] = adapter
-      Rake::Task["#{adapter}:spec"].invoke
-      puts ''
-    rescue Exception
-      errors << "#{adapter}:spec"
+    if ENV[adapter.upcase] || (adapter == 'sqlite3')
+      begin
+        print_msg "Running #{adapter.upcase} specs"
+        ENV['ADAPTER'] = adapter
+        Rake::Task["#{adapter}:spec"].invoke
+        puts ''
+      rescue Exception
+        errors << "#{adapter}:spec"
+      end
+    else
+      print_msg "Skipping #{adapter.upcase} specs because the environment variable '#{adapter.upcase}' is not set"
+      puts
     end
   end
 
