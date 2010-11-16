@@ -22,7 +22,6 @@ describe LegacyData::Schema do
       LegacyData::Schema.should_receive(:puts).with("Warning: Table 'specific_table' does not exist")
       LegacyData::Schema.stub!(:connection=>connection=mock)
       connection.should_receive(:table_exists?).with('specific_table').and_return(false)
-
       LegacyData::Schema.initialize_tables('specific_table')
       
       LegacyData::Schema.table_definitions.keys.should == []

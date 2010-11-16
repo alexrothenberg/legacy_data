@@ -13,7 +13,6 @@ end
 require 'rake'
 
 task :default => :spec_all
-task :spec => :check_dependencies
 
 
 # GEM Tasks --------------------------------------------------------
@@ -23,10 +22,9 @@ Rake::GemPackageTask.new(spec) do |pkg|
 end
 #           --------------------------------------------------------
 
-require 'spec/rake/spectask'
-Spec::Rake::SpecTask.new(:spec) do |spec|
-  spec.libs << 'lib' << 'spec'
-  spec.spec_files = FileList['spec/**/*_spec.rb']
+require "rspec/core/rake_task"
+# rake spec
+RSpec::Core::RakeTask.new :spec do |spec|
 end
 
 def print_msg msg
@@ -60,11 +58,13 @@ def adapters
   %w( mysql sqlite3 oracle)
 end
 
+# run specs for one database adapter
+# i.e. rake mysql:spec OR rake sqlite3:spec
 for adapter in adapters
   namespace adapter do
-    Spec::Rake::SpecTask.new(:spec) do |spec|
-      spec.libs << 'lib' << 'spec'
-      spec.spec_files = FileList["spec/**/*_adapterspec.rb"]
+    desc "Run functional specs using database adapter #{adapter}"
+    RSpec::Core::RakeTask.new :spec do |spec|
+      spec.pattern = "spec/**/*_adapterspec.rb"
     end
   end
 end
@@ -74,9 +74,7 @@ task :spec_all => :spec do
   run_functional_without_aborting(*adapters)
 end
 
-Spec::Rake::SpecTask.new(:rcov) do |spec|
-  spec.libs << 'lib' << 'spec'
-  spec.pattern = 'spec/**/*_spec.rb'
+RSpec::Core::RakeTask.new :rcov do |spec|
   spec.rcov = true
   spec.rcov_opts = ['--exclude spec,gems', '--sort coverage']
 end

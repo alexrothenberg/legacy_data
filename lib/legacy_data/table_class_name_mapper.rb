@@ -43,7 +43,7 @@ Done analyzing the tables.
     end
     
     def dictionary_file_name
-      File.join(RAILS_ROOT, 'app', 'models', 'table_mappings.yml')
+      File.join(Rails.root, 'app', 'models', 'table_mappings.yml')
     end
     
     def class_name_for table_name
@@ -57,7 +57,7 @@ Done analyzing the tables.
     def compute_class_name table_name
       table_name =~ /#{naming_convention}/i
       stripped_table_name = $1 || table_name
-      dictionary[table_name] = ActiveRecord::Base.class_name(stripped_table_name.underscore.downcase.pluralize)
+      dictionary[table_name] = LegacyData.conventional_class_name stripped_table_name
     end
     
     def self.log msg

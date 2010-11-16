@@ -6,7 +6,9 @@ if ENV['ADAPTER'] == 'mysql'
     execute_sql_script(File.expand_path(File.dirname(__FILE__) + '/../../examples/drupal_6_14.sql'))
   end
 
-  describe "Generating models from a drupal 6.14 #{ENV['ADAPTER']} database" do
+  describe ModelsFromTablesGenerator, "Generating models from a drupal 6.14 #{ENV['ADAPTER']} database"  do
+    include GeneratorSpecHelper
+
     before :all do
       @adapter = ENV['ADAPTER']
       @example = :drupal
@@ -16,9 +18,9 @@ if ENV['ADAPTER'] == 'mysql'
       initialize_connection connection_info
       create_drupal_schema
         
-      silence_warnings { RAILS_ROOT = File.expand_path("#{File.dirname(__FILE__)}/../../output/functional/#{@example}_#{@adapter}") } 
-      FileUtils.mkdir_p(RAILS_ROOT + '/app/models')
-      FileUtils.mkdir_p(RAILS_ROOT + '/spec')
+      self.destination_root = File.expand_path("#{File.dirname(__FILE__)}/../../output/functional/#{@example}_#{@adapter}")
+      FileUtils.mkdir_p(destination_root + '/app/models')
+      FileUtils.mkdir_p(destination_root + '/spec')
       
       LegacyData::Schema.stub!(:log)    
 
@@ -26,13 +28,13 @@ if ENV['ADAPTER'] == 'mysql'
       
       LegacyData::TableClassNameMapper.dictionary['files'] = 'UploadedFiles'  #to avoid collision with Ruby File class
       LegacyData::TableClassNameMapper.dictionary['cache'] = 'Cache'          #don't strip the e to make it cach
-
-      FileUtils.rm(RAILS_ROOT + '/spec/factories.rb', :force => true)
-      invoke_generator('models_from_tables', ["--with-factories"], :create)
-    
     end
-    after :all do
-      Object.send(:remove_const, :RAILS_ROOT)
+    
+    before :each do
+      Rails.stub!(:root).and_return(destination_root)
+
+      FileUtils.rm(destination_root + '/spec/factories.rb', :force => true)
+      run_generator []
     end
       
     %w( access       action        actions_aid  authmap        batch                  block        blocks_role 
@@ -43,12 +45,12 @@ if ENV['ADAPTER'] == 'mysql'
         term_node    term_relation term_synonym uploaded_files url_alias              user         users_role 
         variable     vocabulary    vocabulary_node_type        watchdog ).each do |model|
       it "should generate the expected #{model} model" do
-        File.read(RAILS_ROOT + "/app/models/#{model}.rb").should == File.read("#{@expected_directory}/#{model}.rb")
+        File.read(destination_root + "/app/models/#{model}.rb").should == File.read("#{@expected_directory}/#{model}.rb")
       end
     end
     
     it "should  generated the expected factories" do
-      File.read(RAILS_ROOT + '/spec/factories.rb').should == File.read("#{@expected_directory}/factories.rb")
+      File.read(destination_root + '/spec/factories.rb').should == File.read("#{@expected_directory}/factories.rb")
     end
   end
 end

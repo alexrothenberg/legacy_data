@@ -1,6 +1,0 @@
-Description:
-    Creates models for existing tables in a legacy database
-
-Example:
-    `./script/generate legacy_models`
-

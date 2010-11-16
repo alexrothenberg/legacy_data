@@ -15,7 +15,6 @@ module LegacyData
     end
 
     def unconventional_primary_key?
-      puts self.inspect if primary_key.nil?
       primary_key != 'id'
     end
 
@@ -31,7 +30,7 @@ module LegacyData
             class_for_table = TableDefinition.class_name_for(table_name)
             association_name = class_for_table.underscore
             association_name = association_name.pluralize unless is_singular_association
-            needs_class_name = (ActiveRecord::Base.class_name(association_name.pluralize) != class_for_table)
+            needs_class_name = (LegacyData.conventional_class_name(association_name) != class_for_table)
             options[:class_name] = class_for_table if needs_class_name
 
             spaces = association_with_longest_name.size - association_name.size

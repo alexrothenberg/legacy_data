@@ -16,11 +16,12 @@ Gem::Specification.new do |s|
   s.rdoc_options      = ["--charset=UTF-8"]
   s.require_path      = "lib"
 
-  s.add_dependency             'activerecord',  '~> 2.3.5'
+  s.add_dependency             'railties',      '~> 3.0.1'
+  s.add_dependency             'activerecord',  '~> 3.0.1'
+  s.add_dependency             'activesupport', '~> 3.0.1'
   s.add_dependency             'foreigner',     '~> 0.9.1'
 
   s.add_development_dependency 'rake',          '~> 0.8.7'
-  s.add_development_dependency 'rspec',         '~> 1.3.1'
+  s.add_development_dependency 'rspec',         '~> 2.1.0'
   s.add_development_dependency 'sqlite3-ruby',  '~> 1.3.1'
-  s.add_development_dependency 'rails',         '~> 2.3.5'
 end

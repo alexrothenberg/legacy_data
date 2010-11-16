@@ -1,0 +1,12 @@
+Description:
+    Creates models for existing tables in a legacy database
+
+Example:
+    rails generate models_from_tables 
+
+    This will create:
+        an active record model for each table in your database
+        a factory for each model in spec/factories.rb
+        a temporary file showing the table name/class name mappings its using in app/models/table_mappings.yml
+
+

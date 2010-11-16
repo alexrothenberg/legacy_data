@@ -109,6 +109,7 @@ module LegacyData
 
       belongs_to = {}
       connection.foreign_keys(table_name).each do |foreign_key|
+        col = foreign_key.options[:column] || foreign_key.options[:columns].first
         options = {:foreign_key=>foreign_key.options[:column].downcase.to_sym}
         options[:dependent] = :destroy if foreign_key.options[:dependent] == :delete
         belongs_to[foreign_key.to_table.downcase] = options

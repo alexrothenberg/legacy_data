@@ -5,7 +5,9 @@ def create_j2ee_petstore_schema
   execute_sql_script(File.expand_path(File.dirname(__FILE__) + '/../../examples/create_j2ee_petstore.sql') )
 end
 
-describe "Generating models from j2ee petstore #{ENV['ADAPTER']} database" do
+describe ModelsFromTablesGenerator, "Generating models from j2ee petstore #{ENV['ADAPTER']} database" do
+  include GeneratorSpecHelper
+
   before :all do
     @adapter = ENV['ADAPTER']
     @example = :j2ee_petstore
@@ -15,25 +17,23 @@ describe "Generating models from j2ee petstore #{ENV['ADAPTER']} database" do
     initialize_connection connection_info
     create_j2ee_petstore_schema
       
-    silence_warnings { RAILS_ROOT = File.expand_path("#{File.dirname(__FILE__)}/../../output/functional/#{@example}_#{@adapter}") } 
-    FileUtils.mkdir_p(RAILS_ROOT + '/app/models')
-    FileUtils.mkdir_p(RAILS_ROOT + '/spec')
+    self.destination_root = File.expand_path("#{File.dirname(__FILE__)}/../../output/functional/#{@example}_#{@adapter}")
+    FileUtils.mkdir_p(destination_root + '/app/models')
+    FileUtils.mkdir_p(destination_root + '/spec')
   
     LegacyData::Schema.stub!(:log)    
 
     @expected_directory = File.expand_path("#{File.dirname(__FILE__)}/../../examples/generated/#{@example}_#{@adapter}") 
     
+  end
+  
+  before :each do
+    Rails.stub!(:root).and_return(destination_root)
     LegacyData::TableClassNameMapper.dictionary['files'] = 'UploadedFiles'  #to avoid collision with Ruby File class
     LegacyData::TableClassNameMapper.dictionary['cache'] = 'Cache'          #don't strip the e to make it cach
 
-    FileUtils.rm(RAILS_ROOT + '/spec/factories.rb', :force => true)
-    invoke_generator('models_from_tables', ["--with-factories"], :create)
-
-  end
-  
-  
-  after :all do
-    Object.send(:remove_const, :RAILS_ROOT)
+    FileUtils.rm(destination_root + '/spec/factories.rb', :force => true)
+    run_generator []
   end
 
   models =  %w( address   category     id_gen       item           
@@ -47,11 +47,11 @@ describe "Generating models from j2ee petstore #{ENV['ADAPTER']} database" do
                 
   models.each do |model|
     it "should generate the expected #{model} model" do
-      File.read(RAILS_ROOT + "/app/models/#{model}.rb").should == File.read("#{@expected_directory}/#{model}.rb")
+      File.read(destination_root + "/app/models/#{model}.rb").should == File.read("#{@expected_directory}/#{model}.rb")
     end
   end
   
   it "should  generated the expected factories" do
-    File.read(RAILS_ROOT + '/spec/factories.rb').should == File.read("#{@expected_directory}/factories.rb")
+    File.read(destination_root + '/spec/factories.rb').should == File.read("#{@expected_directory}/factories.rb")
   end
 end

@@ -2,6 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 ADAPTER = ENV['ADAPTER']
 
+require 'generators/models_from_tables/models_from_tables_generator'
 
 def initialize_connection connection_info
   ActiveRecord::Base.establish_connection(connection_info)

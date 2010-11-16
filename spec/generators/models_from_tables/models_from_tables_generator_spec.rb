@@ -1,17 +1,19 @@
-require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
-describe 'Models From Tables generator' do
+require 'generators/models_from_tables/models_from_tables_generator'
+
+describe ModelsFromTablesGenerator do
+  include GeneratorSpecHelper
+
   before :all do
-    silence_warnings { RAILS_ROOT = File.expand_path(File.dirname(__FILE__) + '/../output') } 
-    FileUtils.mkdir_p(RAILS_ROOT + '/app/models')
-    FileUtils.mkdir_p(RAILS_ROOT + '/spec')
-  end
-  after :all do
-    Object.send(:remove_const, :RAILS_ROOT)
+    self.destination_root = File.expand_path(File.dirname(__FILE__) + '/../output')
+    FileUtils.mkdir_p(destination_root + '/app/models')
+    FileUtils.mkdir_p(destination_root + '/spec')
   end
   
   before :each do
-    FileUtils.rm(RAILS_ROOT + '/spec/factories.rb', :force => true)
+    Rails.stub!(:root).and_return(destination_root)
+    FileUtils.rm(destination_root + '/spec/factories.rb', :force => true)
     
     @posts = LegacyData::TableDefinition.new( :class_name   => 'Posts',
                                               :table_name   => 'posts',
@@ -32,33 +34,31 @@ describe 'Models From Tables generator' do
                                               )
                     
 
-    LegacyData::Schema.should_receive(:analyze).with(hash_including(:table_name=>'posts')).and_return([@posts])
     LegacyData::TableClassNameMapper.should_receive(:let_user_validate_dictionary)
     LegacyData::TableClassNameMapper.stub!(:class_name_for).with('posts'   ).and_return('Post')
     LegacyData::TableClassNameMapper.stub!(:class_name_for).with('comments').and_return('Comment')
   end
   
-  it 'should generate a posts model' do
-    invoke_generator('models_from_tables', ["--table-name", "posts"], :create)
+  describe 'with factories' do
+    before :each do
+      LegacyData::Schema.should_receive(:analyze).with(hash_including(:table_name=>'posts')).and_return([@posts])
+      run_generator %w(posts)
+    end
 
-    File.read(RAILS_ROOT + '/app/models/post.rb').should == File.read(File.expand_path(File.dirname(__FILE__) + '/expected/post.rb'))
+    it 'should generate a posts model' do
+      File.read(destination_root + '/app/models/post.rb').should == File.read(File.expand_path(File.dirname(__FILE__) + '/expected/post.rb'))
+    end
+    it 'should generate factories' do
+      File.read(destination_root + '/spec/factories.rb' ).should == File.read(File.expand_path(File.dirname(__FILE__) + '/expected/factories.rb'))
+    end
   end
   
-  it 'should not generate factories by default' do
-    generator = load_generator('models_from_tables', ["--table-name", "posts"])
-    generator.should_not_receive(:add_factory_girl_factory)
-
-    cmd = generator.command(:create)
-    cmd.stub!(:logger).and_return(stub('stub').as_null_object)
-    cmd.invoke!
+  it 'should not generate factories when asked not to' do
+    LegacyData::Schema.should_receive(:analyze).with(hash_including(:table_name=>'posts')).and_return([@posts])
+    gen = generator %w(posts), %w(--with-factories false)
+    gen.should_not_receive(:add_factory_girl_factory)
+    capture(:stdout) { gen.invoke_all }
   end
 
-  it 'should generate factories when asked' do
-    generator = load_generator('models_from_tables', ["--table-name", "posts", "--with-factories"])
-    cmd = generator.command(:create)
-    cmd.stub!(:logger).and_return(stub('stub').as_null_object)
-    cmd.invoke!
-    
-    File.read(RAILS_ROOT + '/spec/factories.rb').should == File.read(File.expand_path(File.dirname(__FILE__) + '/expected/factories.rb'))
-  end
 end
+

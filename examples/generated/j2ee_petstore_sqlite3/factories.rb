@@ -1,57 +1,57 @@
-Factory.define :address do |a|
-  a.street1   'some string'
-  a.city      'some string'
-  a.state     'some string'
-  a.zip       'some string'
-  a.latitude  12.3
-  a.longitude 12.3
+Factory.define :address do |address|
+  address.street1   'some string'
+  address.city      'some string'
+  address.state     'some string'
+  address.zip       'some string'
+  address.latitude  12.3
+  address.longitude 12.3
 end
 
-Factory.define :seller_contact_info do |s|
-  s.lastname      'some string'
-  s.firstname     'some string'
-  s.email         'some string'
+Factory.define :seller_contact_info do |seller_contact_info|
+  seller_contact_info.lastname      'some string'
+  seller_contact_info.firstname     'some string'
+  seller_contact_info.email         'some string'
 end
 
-Factory.define :category do |c|
-  c.name        'some string'
-  c.description 'some string'
+Factory.define :category do |category|
+  category.name        'some string'
+  category.description 'some string'
 end
 
-Factory.define :id_gen do |i|
-  i.gen_value 7
+Factory.define :id_gen do |id_gen|
+  id_gen.gen_value 7
 end
 
-Factory.define :item do |i|
-  i.productid                 'some string'
-  i.name                      'some string'
-  i.description               'some string'
-  i.price                     12.3
-  i.address_addressid         'some string'
-  i.contactinfo_contactinfoid 'some string'
-  i.totalscore                7
-  i.numberofvotes             7
-  i.disabled                  7
+Factory.define :item do |item|
+  item.productid                 'some string'
+  item.name                      'some string'
+  item.description               'some string'
+  item.price                     12.3
+  item.address_addressid         'some string'
+  item.contactinfo_contactinfoid 'some string'
+  item.totalscore                7
+  item.numberofvotes             7
+  item.disabled                  7
 end
 
-Factory.define :product do |p|
-  p.categoryid  'some string'
-  p.name        'some string'
-  p.description 'some string'
+Factory.define :product do |product|
+  product.categoryid  'some string'
+  product.name        'some string'
+  product.description 'some string'
 end
 
-Factory.define :tag do |t|
-  t.tag      'some string'
-  t.refcount 7
+Factory.define :tag do |tag|
+  tag.tag      'some string'
+  tag.refcount 7
 end
 
-Factory.define :tag_item do |t|
-  t.tagid  7
-  t.itemid 'some string'
+Factory.define :tag_item do |tag_item|
+  tag_item.tagid  7
+  tag_item.itemid 'some string'
 end
 
-Factory.define :ziplocation do |z|
-  z.city    'some string'
-  z.state   'some string'
+Factory.define :ziplocation do |ziplocation|
+  ziplocation.city    'some string'
+  ziplocation.state   'some string'
 end
 

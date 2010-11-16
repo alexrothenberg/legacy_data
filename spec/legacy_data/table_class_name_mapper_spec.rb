@@ -59,11 +59,8 @@ describe LegacyData::TableClassNameMapper do
   
   describe 'persisting the dictionary' do
     before :each do
-      silence_warnings { RAILS_ROOT = 'test_rails_root' }
+      Rails.stub!(:root).and_return('test/rails/root')
       @dictionary_file_name = LegacyData::TableClassNameMapper.dictionary_file_name
-    end
-    after :each do
-      Object.send(:remove_const, :RAILS_ROOT) if RAILS_ROOT=='test_rails_root'
     end
 
     it 'should load the dictionary from a file' do
