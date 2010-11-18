@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'bundler'
+require 'rake/gempackagetask'
 
 begin
   Bundler.setup(:default, :development)
@@ -11,14 +12,16 @@ rescue Bundler::BundlerError => e
 end
 require 'rake'
 
-begin
-  require 'jeweler'
-  Jeweler::Tasks.new do |gem|
-  end
-  Jeweler::GemcutterTasks.new
-rescue LoadError
-  puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
+task :default => :spec_all
+task :spec => :check_dependencies
+
+
+# GEM Tasks --------------------------------------------------------
+spec = eval(File.read('legacy_data.gemspec'))
+Rake::GemPackageTask.new(spec) do |pkg|
+  pkg.gem_spec = spec
 end
+#           --------------------------------------------------------
 
 require 'spec/rake/spectask'
 Spec::Rake::SpecTask.new(:spec) do |spec|
@@ -78,9 +81,6 @@ Spec::Rake::SpecTask.new(:rcov) do |spec|
   spec.rcov_opts = ['--exclude spec,gems', '--sort coverage']
 end
 
-task :spec => :check_dependencies
-
-task :default => :spec_all
 
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
