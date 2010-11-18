@@ -1,5 +1,10 @@
 === EDGE 
-* 
+* Working on support for Rails 3
+
+=== 0.1.12 2010-11-18
+* The last Rails 2.3 release
+* Use Bundler to manage dependencies (during development) 
+
 
 === 0.1.11 2010-03-05
 * Fix for SQLServer and other drivers that do not support constraints  
