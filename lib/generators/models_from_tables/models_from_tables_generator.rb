@@ -18,7 +18,7 @@ class ModelsFromTablesGenerator < Rails::Generators::Base
     analyzed_tables = LegacyData::Schema.analyze(:table_name=>table_name, :skip_associated=>options[:skip_associated])
 
     unless analyzed_tables.blank?
-      # m.directory File.join('app/models')
+      spec_dir_exists = File.exist? "#{Rails.root}/spec"
 
       LegacyData::TableClassNameMapper.let_user_validate_dictionary
 
@@ -29,7 +29,7 @@ class ModelsFromTablesGenerator < Rails::Generators::Base
         @definition = analyzed_table
         template 'model.rb', File.join('app/models', "#{analyzed_table[:class_name].underscore}.rb")
 
-        add_factory_girl_factory analyzed_table if options[:with_factories]
+        add_factory_girl_factory analyzed_table if options[:with_factories] && spec_dir_exists
       end
     end
   end

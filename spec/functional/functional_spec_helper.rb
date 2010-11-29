@@ -7,11 +7,8 @@ require 'generators/models_from_tables/models_from_tables_generator'
 def initialize_connection connection_info
   ActiveRecord::Base.establish_connection(connection_info)
 
-  begin
-    require "foreigner/connection_adapters/#{ActiveRecord::Base.connection.adapter_name.downcase}_adapter"
-  rescue LoadError
-    #foreigner does not support all adapters (i.e. sqlite3)
-  end
+  # tell foreigner to reload the adapter
+  Foreigner.load_adapter!
 end
   
 

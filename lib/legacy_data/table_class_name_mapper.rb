@@ -1,3 +1,5 @@
+require 'singleton'
+
 module LegacyData
   class TableClassNameMapper
     include Singleton
