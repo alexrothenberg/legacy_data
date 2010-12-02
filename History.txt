@@ -1,5 +1,5 @@
-=== EDGE 
-* Working on support for Rails 3
+=== 0.2.0 2010-12-02
+* First version to work with Rails 3
 
 === 0.1.12 2010-11-18
 * The last Rails 2.3 release

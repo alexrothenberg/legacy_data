@@ -5,8 +5,7 @@ encoded in the database?  Do you have to understand the entire data model before
 in the `legacy_data` gem can help!  This generator looks into your existing database and generates ActiveRecord models based on the 
 information encoded in it.
 
-* Version 0.1.12 is the last version for Rails 2.3
-* Version 0.2.0 is a work in progress (not yet released to rubygems) and will be the first version compatible with Rails3 ... but it is not yet ready for use.
+* If you are using Rails 2.3 you must use v 0.1.12 of this gem "gem install legacy_data --version 0.1.12"
 
 
 ## How to use it
@@ -17,17 +16,17 @@ information encoded in it.
 
 - If you don't want all tables in the database tell it which table to model
  
-  `script/generate models_from_tables --table-name comments`
+  `script/generate models_from_tables comments`
   
   This uses any foreign_key constraints in the database to spider the database and model the comments table and all associated tables.
   
 - If you *really* only want the comments table tell it not to follow any foreign_keys
 
-  `script/generate models_from_tables --table-name comments --skip-associated`
+  `script/generate models_from_tables comments --skip-associated`
 
 - If you use [factory girl](http://github.com/thoughtbot/factory_girl) it will generate a simple factory for each model it generates
 
-  `script/generate models_from_tables --table-name comments --with-factories`
+  `script/generate models_from_tables comments`
 
 (You do need to install the plugin `gem install legacy_data` as long as http://gemcutter.org is one of your gem sources)
 
@@ -88,4 +87,4 @@ end
 
 # Copyright
 
-Copyright (c) 2009 Alex Rothenberg. See LICENSE for details.
+Copyright (c) 2010 Alex Rothenberg. See LICENSE for details.
