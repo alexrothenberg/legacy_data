@@ -5,7 +5,9 @@ encoded in the database?  Do you have to understand the entire data model before
 in the `legacy_data` gem can help!  This generator looks into your existing database and generates ActiveRecord models based on the 
 information encoded in it.
 
-* If you are using Rails 2.3 you must use v 0.1.12 of this gem "gem install legacy_data --version 0.1.12"
+This gem works with Rails 3
+
+* If you are using Rails 2.3 you must use v 0.1.12 "gem install legacy_data --v 0.1.12"
 
 
 ## How to use it
