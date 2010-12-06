@@ -134,7 +134,7 @@ module LegacyData
         boolean_presence_columns,        @constraints[:presence_of]         = presence_constraints
         @constraints[:numericality_of]                                      = numericality_constraints
         @constraints[:custom],           @constraints[:inclusion_of]        = custom_constraints
-        
+
         boolean_presence_columns.each {|col| @constraints[:inclusion_of][col] = "true, false" }
       end
       @constraints
@@ -186,7 +186,7 @@ module LegacyData
     end
     
     def custom_constraints
-      return [[],[]] unless connection.respond_to? :constraints
+      return [{}, {}] unless connection.respond_to? :constraints
       custom_constraints, inclusion_constraints = {}, {}
       connection.constraints(table_name).each do |constraint|
         constraint_sql = constraint.second

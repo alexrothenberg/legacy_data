@@ -1,1 +1,1 @@
-rvm @legacy_data
+rvm --create use @legacy_data

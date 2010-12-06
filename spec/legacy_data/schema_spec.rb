@@ -203,7 +203,7 @@ describe LegacyData::Schema do
     
       it 'should give no custom constraints when the adapter does not support it' do
         @connection.should_receive(:respond_to?).with(:constraints).and_return(false)
-        @schema.custom_constraints.should == [[],[]]
+        @schema.custom_constraints.should == [{},{}]
       end
   
       describe 'custom constraints' do

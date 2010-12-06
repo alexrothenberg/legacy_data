@@ -8,6 +8,7 @@ def create_blog_tables
   connection.create_table :posts do |t|
     t.string :title
     t.text   :body
+    t.boolean :published, :null=>false
   end
   connection.create_table :comments do |t|
     t.integer     :post_id

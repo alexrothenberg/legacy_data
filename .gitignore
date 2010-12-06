@@ -1,6 +1,7 @@
 .bundle
 Gemfile.lock
 *.sw?
+*~
 .DS_Store
 coverage
 rdoc
