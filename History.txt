@@ -1,3 +1,6 @@
+=== 0.2.1 2010-12-06
+* Fixed bug with boolean non-nullable columns for databases not supported by foreigner
+
 === 0.2.0 2010-12-02
 * First version to work with Rails 3
 
