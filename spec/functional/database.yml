@@ -13,7 +13,7 @@ sqlite3_blog:
 # GRANT ALL PRIVILEGES TO legacy_data_blog;
 oracle_blog:
   adapter:  oracle_enhanced
-  database: localhost:1521/XE
+  database: localhost:1521/orcl
   username: legacy_data_blog
   password: legacy_data_blog
 
@@ -39,7 +39,7 @@ sqlite3_j2ee_petstore:
 # GRANT ALL PRIVILEGES TO petstore;
 oracle_j2ee_petstore:
   adapter:  oracle_enhanced
-  database: localhost:1521/XE
+  database: localhost:1521/orcl
   username: petstore
   password: petstore
 
