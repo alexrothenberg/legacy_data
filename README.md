@@ -12,6 +12,10 @@ This gem works with Rails 3
 
 ## How to use it
 
+Add the gem to your Rails application
+
+  `Gem 'legacy_data'`
+
 - To generate an ActiveRecord model for each table in the database just type
 
   `script/generate models_from_tables`

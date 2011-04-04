@@ -1,9 +1,9 @@
 require File.expand_path(File.dirname(__FILE__) + '../../../spec_helper')
 
+
 require 'generators/models_from_tables/models_from_tables_generator'
 
 describe ModelsFromTablesGenerator do
-  include GeneratorSpecHelper
 
   before :all do
     self.destination_root = File.expand_path(File.dirname(__FILE__) + '/../output')
@@ -52,7 +52,7 @@ describe ModelsFromTablesGenerator do
       File.read(destination_root + '/spec/factories.rb' ).should == File.read(File.expand_path(File.dirname(__FILE__) + '/expected/factories.rb'))
     end
   end
-  
+
   it 'should not generate factories when asked not to' do
     LegacyData::Schema.should_receive(:analyze).with(hash_including(:table_name=>'posts')).and_return([@posts])
     gen = generator %w(posts), %w(--with-factories false)

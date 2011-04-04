@@ -6,8 +6,7 @@ if ENV['ADAPTER'] == 'mysql'
     execute_sql_script(File.expand_path(File.dirname(__FILE__) + '/../../examples/drupal_6_14.sql'))
   end
 
-  describe ModelsFromTablesGenerator, "Generating models from a drupal 6.14 #{ENV['ADAPTER']} database"  do
-    include GeneratorSpecHelper
+  describe ModelsFromTablesGenerator, "Generating models from a drupal 6.14 #{ENV['ADAPTER']} database", :type=>:generator do
 
     before :all do
       @adapter = ENV['ADAPTER']
@@ -31,10 +30,11 @@ if ENV['ADAPTER'] == 'mysql'
     end
     
     before :each do
+      LegacyData::TableClassNameMapper.stub!(:wait_for_user_confirmation)
       Rails.stub!(:root).and_return(destination_root)
 
       FileUtils.rm(destination_root + '/spec/factories.rb', :force => true)
-      run_generator []
+      run_generator
     end
       
     %w( access       action        actions_aid  authmap        batch                  block        blocks_role 

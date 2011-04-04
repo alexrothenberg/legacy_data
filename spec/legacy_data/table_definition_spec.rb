@@ -32,7 +32,7 @@ describe LegacyData::TableDefinition do
         table_definition = LegacyData::TableDefinition.new(:constraints => {:inclusion_of => {:flag  => ['Y', 'N'],
                                                                                               :state => ['MA', 'NY']}
                                                                       })
-        table_definition.inclusion_of_constraints_to_s.first.should == <<-RB
+        state_validation = <<-RB
   def self.possible_values_for_state
     ["MA", "NY"]
   end
@@ -40,7 +40,7 @@ describe LegacyData::TableDefinition do
                          :in      => possible_values_for_state, 
                          :message => "is not one of (\#{possible_values_for_state.join(', ')})"
         RB
-        table_definition.inclusion_of_constraints_to_s.second.should == <<-RB
+        flag_validation = <<-RB
   def self.possible_values_for_flag
     ["Y", "N"]
   end
@@ -48,6 +48,8 @@ describe LegacyData::TableDefinition do
                          :in      => possible_values_for_flag, 
                          :message => "is not one of (\#{possible_values_for_flag.join(', ')})"
         RB
+        table_definition.inclusion_of_constraints_to_s.should include(state_validation, flag_validation)
+        table_definition.inclusion_of_constraints_to_s.size.should == 2
       end
 
       it 'should generate inclusion of constraints with a method returning possible values' do

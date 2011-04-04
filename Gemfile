@@ -9,4 +9,6 @@ group :development do
     gem "activerecord-oracle_enhanced-adapter", '~> 1.3.0'
     gem 'ruby-oci8',                            '~> 2.0.4'
   end
+
+  gem 'rspec-rails', :git => 'https://github.com/alexrothenberg/rspec-rails.git', :branch => 'generator_example_group'
 end

@@ -34,13 +34,12 @@ module LegacyData
 
     def let_user_validate_dictionary
       save_dictionary
-      self.class.log <<-MSG
-Done analyzing the tables.  
-  Automatic class names written to '#{LegacyData::TableClassNameMapper.dictionary_file_name}'
-  Since the database probably does not follow Rails naming conventions you should take a look at the class names and update them in that file. 
-  Once you're done hit <enter> to continue generating the models"
-      MSG
-      gets
+      self.class.wait_for_user_confirmation <<-MSG
+      Done analyzing the tables.
+        Automatic class names written to '#{LegacyData::TableClassNameMapper.dictionary_file_name}'
+        Since the database probably does not follow Rails naming conventions you should take a look at the class names and update them in that file.
+        Once you're done hit <enter> to continue generating the models"
+            MSG
       load_dictionary
     end
     
@@ -62,6 +61,10 @@ Done analyzing the tables.
       dictionary[table_name] = LegacyData.conventional_class_name stripped_table_name
     end
     
+    def self.wait_for_user_confirmation msg
+      log msg
+      gets
+    end
     def self.log msg
       puts msg
     end

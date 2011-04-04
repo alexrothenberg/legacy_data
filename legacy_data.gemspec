@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_dependency             'foreigner',     '~> 0.9.1'
 
   s.add_development_dependency 'rake',          '~> 0.8.7'
-  s.add_development_dependency 'rspec',         '~> 2.1.0'
+  s.add_development_dependency 'rspec',         '~> 2.5.0'
+#  s.add_development_dependency 'rspec-rails',   '~> 2.5.0'   # moved to Gemfile to use unmerged branch from github
   s.add_development_dependency 'sqlite3-ruby',  '~> 1.3.1'
 end

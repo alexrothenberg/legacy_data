@@ -1,8 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/functional_spec_helper')
 
 
-describe ModelsFromTablesGenerator, "Generating models from a blog #{ENV['ADAPTER']} database" do
-  include GeneratorSpecHelper
+describe ModelsFromTablesGenerator, "Generating models from a blog #{ENV['ADAPTER']} database", :type=>:generator do
 
   before :all do
     @adapter = ENV['ADAPTER']
@@ -25,10 +24,11 @@ describe ModelsFromTablesGenerator, "Generating models from a blog #{ENV['ADAPTE
   before :each do #
     pending("oracle does not yet work with t.foreign_key table creation") if @adapter == 'oracle'
 
+    LegacyData::TableClassNameMapper.stub!(:wait_for_user_confirmation)
     Rails.stub!(:root).and_return(destination_root)
 
     FileUtils.rm(destination_root + '/spec/factories.rb', :force => true)
-    run_generator []
+    run_generator
   end
 
   %w( post comment tag ).each do |model|
