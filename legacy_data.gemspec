@@ -16,9 +16,9 @@ Gem::Specification.new do |s|
   s.rdoc_options      = ["--charset=UTF-8"]
   s.require_path      = "lib"
 
-  s.add_dependency             'railties',      '~> 3.0.1'
-  s.add_dependency             'activerecord',  '~> 3.0.1'
-  s.add_dependency             'activesupport', '~> 3.0.1'
+  s.add_dependency             'railties',      '~> 3.0'
+  s.add_dependency             'activerecord',  '~> 3.0'
+  s.add_dependency             'activesupport', '~> 3.0'
   s.add_dependency             'foreigner',     '~> 0.9.1'
 
   s.add_development_dependency 'rake',          '~> 0.8.7'

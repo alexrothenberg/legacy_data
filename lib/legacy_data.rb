@@ -1,4 +1,5 @@
 require 'foreigner' #matthuhiggens-foreigner
+require 'singleton'
 
 require 'legacy_data/table_definition'
 require 'legacy_data/schema'
